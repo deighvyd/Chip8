@@ -5,8 +5,11 @@
 #include "OpenGL.h"
 #include "Texture.h"
 
+using namespace std;
+
 Model::Model()
 	: _texture(nullptr)
+	, _vertices(nullptr)
 {
 }
 
@@ -18,8 +21,13 @@ Model::~Model()
 {
 }
 
-bool Model::Initialize(OpenGL *openGL, const char* textureFilename, unsigned int textureUnit, bool wrap)
+bool Model::Initialize(OpenGL *openGL, const char* modelFilename, const char* textureFilename, unsigned int textureUnit, bool wrap)
 {
+	if (!LoadModel(modelFilename))
+	{
+		return false;
+	}
+
 	if (!InitializeBuffers(openGL))
 	{
 		return false;
@@ -37,6 +45,7 @@ void Model::Shutdown(OpenGL *openGL)
 {
 	ReleaseTexture();
 	ShutdownBuffers(openGL);
+	ReleaseModel();
 }
 
 void Model::Render(OpenGL *openGL)
@@ -46,10 +55,6 @@ void Model::Render(OpenGL *openGL)
 
 bool Model::InitializeBuffers(OpenGL *openGL)
 {
-	// build a triangle
-	_vertexCount = 3;
-	_indexCount = 3;
-
 	Vertex* vertices = new Vertex[_vertexCount];
 	if (vertices == nullptr)
 	{
@@ -62,46 +67,19 @@ bool Model::InitializeBuffers(OpenGL *openGL)
 		return false;
 	}
 
-	// bottom left
-	vertices[0].x = -1.0f;  // position
-	vertices[0].y = -1.0f;
-	vertices[0].z =  0.0f;
+	for (int i = 0 ; i < _vertexCount ; ++i)
+	{
+		vertices[i].x  = _vertices[i].x;
+		vertices[i].y  = _vertices[i].y;
+		vertices[i].z  = _vertices[i].z;
+		vertices[i].tu = _vertices[i].tu;
+		vertices[i].tv = 1.0f - _vertices[i].tv;
+		vertices[i].nx = _vertices[i].nx;
+		vertices[i].ny = _vertices[i].ny;
+		vertices[i].nz = _vertices[i].nz;
 
-	vertices[0].tu = 0.0f;  // texture coords
-	vertices[0].tv = 0.0f;
-
-	vertices[0].nx =  0.0f;  // normal
-	vertices[0].ny =  0.0f;
-	vertices[0].nz = -1.0f;
-
-	// top middle
-	vertices[1].x = 0.0f;  // position
-	vertices[1].y = 1.0f;
-	vertices[1].z = 0.0f;
-
-	vertices[1].tu = 0.5f;  // texture coords
-	vertices[1].tv = 1.0f;
-
-	vertices[1].nx =  0.0f;  // normal
-	vertices[1].ny =  0.0f;
-	vertices[1].nz = -1.0f;
-
-	// bottom right
-	vertices[2].x =  1.0f;  // position
-	vertices[2].y = -1.0f;
-	vertices[2].z =  0.0f;
-
-	vertices[2].tu = 1.0f;  // texture coords
-	vertices[2].tv = 0.0f;
-
-	vertices[2].nx =  0.0f;  // normal
-	vertices[2].ny =  0.0f;
-	vertices[2].nz = -1.0f;
-
-	// load the index array with data
-	indices[0] = 0;  // bottom left
-	indices[1] = 1;  // top middle
-	indices[2] = 2;  // bottom right
+		indices[i] = i;
+	}
 
 	// create and bind vertex buffer
 	openGL->glGenVertexArrays(1, &_vertexArrayId);
@@ -159,6 +137,61 @@ void Model::RenderBuffers(OpenGL *openGL)
 {
 	openGL->glBindVertexArray(_vertexArrayId);
 	glDrawElements(GL_TRIANGLES, _indexCount, GL_UNSIGNED_INT, 0);
+}
+
+bool Model::LoadModel(const char* filename)
+{
+	// open the model file
+	ifstream fin(filename);
+	if (fin.fail())
+	{
+		return false;
+	}
+
+	// read the vertex count
+	char input;
+	fin.get(input);
+	while (input != ':')
+	{
+		fin.get(input);
+	}
+
+	fin >> _vertexCount;
+	_indexCount = _vertexCount;
+
+	// create the model
+	_vertices = new Vertex[_vertexCount];
+	if (_vertices == nullptr)
+	{
+		return false;
+	}
+
+	fin.get(input);
+	while (input != ':')
+	{
+		fin.get(input);
+	}
+	fin.get(input);
+	fin.get(input);
+
+	for (int i = 0 ; i < _vertexCount ; ++i)
+	{
+		fin >> _vertices[i].x >> _vertices[i].y >> _vertices[i].z;
+		fin >> _vertices[i].tu >> _vertices[i].tv;
+		fin >> _vertices[i].nx >> _vertices[i].ny >> _vertices[i].nz;
+	}
+	fin.close();
+
+	return true;
+}
+
+void Model::ReleaseModel()
+{
+	if (_vertices)
+	{
+		delete [] _vertices;
+		_vertices = nullptr;
+	}
 }
 
 bool Model::LoadTexture(OpenGL* OpenGL, const char* textureFilename, unsigned int textureUnit, bool wrap)

@@ -18,7 +18,7 @@ public:
 	Model(const Model&);
 	virtual ~Model();
 
-	bool Initialize(OpenGL *openGL, const char* textureFilename, unsigned int textureUnit, bool wrap);
+	bool Initialize(OpenGL *openGL, const char* modelFilename, const char* textureFilename, unsigned int textureUnit, bool wrap);
 	void Shutdown(OpenGL *openGL);
 	void Render(OpenGL *openGL);
 
@@ -27,16 +27,20 @@ private:
 	void ShutdownBuffers(OpenGL *openGL);
 	void RenderBuffers(OpenGL *openGL);
 
-	bool LoadTexture(OpenGL* openGL, const char*, unsigned int, bool);
+	bool LoadModel(const char* filename);
+	void ReleaseModel();
+
+	bool LoadTexture(OpenGL* openGL, const char* textureFilename, unsigned int textureUnit, bool wrap);
 	void ReleaseTexture();
 
 private:
 	int _vertexCount;
 	int _indexCount;
+	Vertex* _vertices;
+	Texture* _texture;
+
 	unsigned int _vertexArrayId;
 	unsigned int _vertexBufferId;
 	unsigned int _indexBufferId;
-
-	Texture* _texture;
 
 };

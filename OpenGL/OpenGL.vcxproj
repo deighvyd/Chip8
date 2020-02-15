@@ -61,6 +61,13 @@
     <None Include="shaders\Texture.ps" />
     <None Include="shaders\Texture.vs" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="models\Cube.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="textures\stone.tga" />
+    <Image Include="textures\test.tga" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{2190B9C3-67BD-471B-8CCF-D2F2BA5C1C2D}</ProjectGuid>

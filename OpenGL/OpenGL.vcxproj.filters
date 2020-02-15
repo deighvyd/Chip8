@@ -7,6 +7,12 @@
     <Filter Include="shaders">
       <UniqueIdentifier>{b8b36214-afb0-4b41-92c4-8588635a6cd6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="models">
+      <UniqueIdentifier>{0084455d-d6ef-4fb8-a979-ad6355d7ac3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="textures">
+      <UniqueIdentifier>{2e410ab7-6ee7-4fb9-91df-56e8c1c8d8e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Graphics.cpp">
@@ -115,5 +121,18 @@
     <None Include="shaders\Light.vs">
       <Filter>shaders</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="models\Cube.txt">
+      <Filter>models</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="textures\stone.tga">
+      <Filter>textures</Filter>
+    </Image>
+    <Image Include="textures\test.tga">
+      <Filter>textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>
