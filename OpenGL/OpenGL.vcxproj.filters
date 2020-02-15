@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{50012601-89cd-4430-a52c-c4d202258475}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{b8b36214-afb0-4b41-92c4-8588635a6cd6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Graphics.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Input.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenGL.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Application.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ColourShader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Model.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Camera.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Graphics.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Input.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenGL.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenGLDefines.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pch.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Application.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ColourShader.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Model.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Camera.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\Colour.vs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\Colour.ps">
+      <Filter>shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>
