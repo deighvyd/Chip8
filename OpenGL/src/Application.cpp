@@ -2,6 +2,10 @@
 
 #include "Application.h"
 
+#include "OpenGL.h"
+#include "Input.h"
+#include "Graphics.h"
+
 Application::Application()
 {
 	_openGL = nullptr;

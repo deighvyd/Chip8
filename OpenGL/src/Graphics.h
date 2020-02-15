@@ -1,10 +1,9 @@
 #pragma once
 
-#include "OpenGL.h"
-
-#include "Camera.h"
-#include "Model.h"
-#include "ColourShader.h"
+class OpenGL;
+class Camera;
+class Model;
+class Shader;
 
 class Graphics
 {
@@ -31,6 +30,7 @@ private:
 
 	Camera* _camera;
 	Model* _model;
-	ColourShader* _colourShader;
+	Shader* _colourShader;
+	Shader* _textureShader;
 
 };

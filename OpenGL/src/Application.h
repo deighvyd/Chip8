@@ -1,8 +1,8 @@
 #pragma once
 
-#include "OpenGL.h"
-#include "Input.h"
-#include "Graphics.h"
+class OpenGL;
+class Input;
+class Graphics;
 
 static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 

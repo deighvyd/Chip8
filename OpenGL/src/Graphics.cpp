@@ -2,11 +2,18 @@
 
 #include "Graphics.h"
 
+#include "OpenGL.h"
+#include "Camera.h"
+#include "Model.h"
+#include "ColourShader.h"
+#include "TextureShader.h"
+
 Graphics::Graphics()
 	: _openGL(nullptr)
 	, _camera(nullptr)
 	, _model(nullptr)
 	, _colourShader(nullptr)
+	, _textureShader(nullptr)
 {
 }
 
@@ -18,7 +25,7 @@ Graphics::~Graphics()
 {
 }
 
-bool Graphics::Initialize(OpenGL* openGL, HWND hwnd)
+bool Graphics::Initialize(OpenGL* openGL, HWND hWnd)
 {
 	_openGL = openGL;
 
@@ -34,9 +41,9 @@ bool Graphics::Initialize(OpenGL* openGL, HWND hwnd)
 		return false;
 	}
 
-	if (!_model->Initialize(_openGL))
+	if (!_model->Initialize(_openGL, "textures/test.tga", 0, true))
 	{
-		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		MessageBox(hWnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}
 	
@@ -45,9 +52,20 @@ bool Graphics::Initialize(OpenGL* openGL, HWND hwnd)
 		return false;
 	}
 
-	if (!_colourShader->Initialize(_openGL, hwnd))
+	if (!_colourShader->Initialize(_openGL, hWnd))
 	{
-		MessageBox(hwnd, L"Could not initialize the color shader object.", L"Error", MB_OK);
+		MessageBox(hWnd, L"Could not initialize the color shader object.", L"Error", MB_OK);
+		return false;
+	}
+
+	if ((_textureShader = new TextureShader()) == nullptr)
+	{
+		return false;
+	}
+
+	if (!_textureShader->Initialize(openGL, hWnd))
+	{
+		MessageBox(hWnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -61,6 +79,13 @@ void Graphics::Shutdown()
 		_colourShader->Shutdown(_openGL);
 		delete _colourShader;
 		_colourShader = nullptr;
+	}
+
+	if (_textureShader == nullptr)
+	{
+		_textureShader->Shutdown(_openGL);
+		delete _textureShader;
+		_textureShader = nullptr;
 	}
 
 	if (_model)
@@ -106,9 +131,13 @@ bool Graphics::Render()
 	_camera->GetViewMatrix(viewMatrix);
 	_openGL->GetProjectionMatrix(projectionMatrix);
 
-	// set the color shader as the current shader program and set the matrices that it will use for rendering.
-	_colourShader->SetShader(_openGL);
-	_colourShader->SetShaderParameters(_openGL, worldMatrix, viewMatrix, projectionMatrix);
+	// render the model using the shader
+
+	//Shader* shader = _colourShader;
+	Shader* shader = _textureShader;
+	
+	shader->SetShader(_openGL);
+	shader->SetShaderParameters(_openGL, worldMatrix, viewMatrix, projectionMatrix);
 
 	_model->Render(_openGL);
 
