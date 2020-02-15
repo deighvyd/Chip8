@@ -5,7 +5,7 @@ class Light
 public:
 	Light();
 	Light(const Light&);
-	~Light();
+	virtual ~Light();
 
 	void SetDiffuseColour(float red, float green, float blue, float alpha);
 	void SetDirection(float x, float y, float z);

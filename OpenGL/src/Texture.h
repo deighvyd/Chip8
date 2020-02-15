@@ -17,7 +17,7 @@ private:
 public:
 	Texture();
 	Texture(const Texture&);
-	~Texture();
+	virtual ~Texture();
 
 	bool Initialize(OpenGL* openGL, const char* filename, unsigned int textureUnit, bool wrap);
 	void Shutdown();

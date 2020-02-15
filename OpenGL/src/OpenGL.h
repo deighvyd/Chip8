@@ -7,7 +7,7 @@ class OpenGL
 public:
 	OpenGL();
 	OpenGL(const OpenGL&);
-	~OpenGL();
+	virtual ~OpenGL();
 
 	bool InitializeExtensions(HWND hWnd);
 	bool InitializeOpenGL(HWND hWnd, int screenWidth, int screenHeight, float screenDepth, float screenNear, bool vSync);

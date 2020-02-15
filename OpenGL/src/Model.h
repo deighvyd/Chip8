@@ -16,7 +16,7 @@ private:
 public:
 	Model();
 	Model(const Model&);
-	~Model();
+	virtual ~Model();
 
 	bool Initialize(OpenGL *openGL, const char* textureFilename, unsigned int textureUnit, bool wrap);
 	void Shutdown(OpenGL *openGL);

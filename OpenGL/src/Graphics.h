@@ -17,7 +17,7 @@ public:
 public:
 	Graphics();
 	Graphics(const Graphics& other);
-	~Graphics();
+	virtual ~Graphics();
 
 	bool Initialize(OpenGL* openGL, HWND hwnd);
 	void Shutdown();

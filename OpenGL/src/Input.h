@@ -5,7 +5,7 @@ class Input
 public:
 	Input();
 	Input(const Input& other);
-	~Input();
+	virtual ~Input();
 
 	void Initialize();
 

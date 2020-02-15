@@ -11,7 +11,7 @@ class Application
 public:
 	Application();
 	Application(const Application& other);
-	~Application();
+	virtual ~Application();
 
 	bool Initialize();
 	void Shutdown();

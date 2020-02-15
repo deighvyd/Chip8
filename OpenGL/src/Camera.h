@@ -11,7 +11,7 @@ private:
 public:
 	Camera();
 	Camera(const Camera&);
-	~Camera();
+	virtual ~Camera();
 
 	void SetPosition(float x, float y, float z);
 	void SetRotation(float x, float y, float z);
