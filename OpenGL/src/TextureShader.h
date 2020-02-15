@@ -16,6 +16,7 @@ public:
 									 float* projectionMatrix, 
 									 int textureUnit = 0,
 									 float* lightDirection = nullptr, 
-									 float* diffuseLightColour = nullptr) override;
+									 float* diffuseLightColour = nullptr,
+									 float* ambientLight = nullptr) override;
 	
 };

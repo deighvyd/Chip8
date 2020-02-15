@@ -29,7 +29,7 @@ bool LightShader::Initialize(OpenGL* openGL, HWND hWnd)
 	return true;
 }
 
-bool LightShader::SetShaderParameters(OpenGL* openGL, float* worldMatrix, float* viewMatrix, float* projectionMatrix, int textureUnit, float* lightDirection, float* diffuseLightColour)
+bool LightShader::SetShaderParameters(OpenGL* openGL, float* worldMatrix, float* viewMatrix, float* projectionMatrix, int textureUnit, float* lightDirection, float* diffuseLightColour, float* ambientLight)
 {
 	if (!TextureShader::SetShaderParameters(openGL, worldMatrix, viewMatrix, projectionMatrix, textureUnit))
 	{
@@ -50,6 +50,13 @@ bool LightShader::SetShaderParameters(OpenGL* openGL, float* worldMatrix, float*
 		return false;
 	}
 	openGL->glUniform4fv(location, 1, diffuseLightColour);
+
+	location = openGL->glGetUniformLocation(_shaderProgram, "ambientLight");
+	if (location == -1)
+	{
+		return false;
+	}
+	openGL->glUniform4fv(location, 1, ambientLight);
 	
 	return true;
 }

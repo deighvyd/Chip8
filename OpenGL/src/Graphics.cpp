@@ -106,6 +106,9 @@ bool Graphics::Initialize(OpenGL* openGL, HWND hWnd)
 	}
 	_light->SetDiffuseColour(1.0f, 1.0f, 1.0f, 1.0f);
 	_light->SetDirection(0.0f, 0.0f, 1.0f);
+	_light->SetDirection(1.0f, 0.0f, 0.0f);
+	_light->SetAmbientLight(0.15f, 0.15f, 0.15f, 1.0f);
+
 
 	return true;
 }
@@ -144,7 +147,7 @@ bool Graphics::RunFrame()
 	static float rotation = 0.0f;
 	
 	// rotate every frame
-	rotation += 0.0174532925f * 2.0f;
+	rotation += 0.0174532925f * 1.0f;
 	if (rotation > 360.0f)
 	{
 		rotation -= 360.0f;
@@ -181,6 +184,9 @@ bool Graphics::Render(float rotation)
 	float diffuseLightColor[4];
 	_light->GetDiffuseColour(diffuseLightColor);
 
+	float ambientLight[4];
+	_light->GetAmbientLight(ambientLight);
+
 	// rotate the world matrix by the value passed in
 	_openGL->MatrixRotationY(worldMatrix, rotation);
 
@@ -191,7 +197,7 @@ bool Graphics::Render(float rotation)
 	Shader* shader = _lightShader;
 	
 	shader->SetShader(_openGL);
-	shader->SetShaderParameters(_openGL, worldMatrix, viewMatrix, projectionMatrix, 0, lightDirection, diffuseLightColor);
+	shader->SetShaderParameters(_openGL, worldMatrix, viewMatrix, projectionMatrix, 0, lightDirection, diffuseLightColor, ambientLight);
 
 	_model->Render(_openGL);
 

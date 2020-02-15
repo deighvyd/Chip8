@@ -28,7 +28,7 @@ void Shader::SetShader(OpenGL* openGL)
 	openGL->glUseProgram(_shaderProgram);
 }
 
-bool Shader::SetShaderParameters(OpenGL* openGL, float* worldMatrix, float* viewMatrix, float* projectionMatrix, int textureUnit, float* lightDirection, float* diffuseLightColour)
+bool Shader::SetShaderParameters(OpenGL* openGL, float* worldMatrix, float* viewMatrix, float* projectionMatrix, int textureUnit, float* lightDirection, float* diffuseLightColour, float* ambientLight)
 {
 	unsigned int location = openGL->glGetUniformLocation(_shaderProgram, "worldMatrix");
 	if (location == -1)

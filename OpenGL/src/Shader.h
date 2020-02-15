@@ -21,7 +21,8 @@ public:
 									 float* projectionMatrix,
 									 int textureUnit = 0,
 									 float* lightDirection = nullptr, 
-									 float* diffuseLightColour = nullptr);
+									 float* diffuseLightColour = nullptr,
+									 float* ambientLight = nullptr);
 
 protected:
 	bool InitializeShader(const char* vsFilename, const char* fsFilename, OpenGL* openGL, HWND hWnd);
