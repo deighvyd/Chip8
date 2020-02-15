@@ -45,6 +45,12 @@
     <ClCompile Include="src\Shader.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\LightShader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Light.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics.h">
@@ -83,6 +89,12 @@
     <ClInclude Include="src\Shader.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\LightShader.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Light.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\Colour.vs">
@@ -95,6 +107,12 @@
       <Filter>shaders</Filter>
     </None>
     <None Include="shaders\Texture.ps">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\Light.ps">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\Light.vs">
       <Filter>shaders</Filter>
     </None>
   </ItemGroup>

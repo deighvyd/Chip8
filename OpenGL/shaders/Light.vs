@@ -1,9 +1,11 @@
 #version 400
 
 in vec3 inputPosition;
-in vec3 inputColour;
+in vec2 inputTexCoord;
+in vec3 inputNormal;
 
-out vec3 colour;
+out vec2 texCoord;
+out vec3 normal;
 
 uniform mat4 worldMatrix;
 uniform mat4 viewMatrix;
@@ -16,6 +18,10 @@ void main(void)
 	gl_Position = viewMatrix * gl_Position;
 	gl_Position = projectionMatrix * gl_Position;
 
-	// store the input colour for the pixel shader to use.
-	colour = inputColour;
+	// store the texture coordinates for the pixel shader.
+	texCoord = inputTexCoord;
+
+	// calculate the normal vector against the world matrix only.
+	normal = mat3(worldMatrix) * inputNormal;
+	normal = normalize(normal);
 }

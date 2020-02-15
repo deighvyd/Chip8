@@ -4,6 +4,7 @@ class OpenGL;
 class Camera;
 class Model;
 class Shader;
+class Light;
 
 class Graphics
 {
@@ -23,7 +24,7 @@ public:
 	bool RunFrame();
 
 private:
-	bool Render();
+	bool Render(float rotation);
 
 private:
 	OpenGL* _openGL;
@@ -32,5 +33,8 @@ private:
 	Model* _model;
 	Shader* _colourShader;
 	Shader* _textureShader;
+	Shader* _lightShader;
+
+	Light* _light;
 
 };

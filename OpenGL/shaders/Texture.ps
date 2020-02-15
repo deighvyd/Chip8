@@ -2,16 +2,16 @@
 
 in vec2 texCoord;
 
-out vec4 outputColor;
+out vec4 outputColour;
 
 uniform sampler2D shaderTexture;
 
 void main(void)
 {
-	vec4 textureColor;
+	vec4 textureColour;
 	
-	// sample the pixel color from the texture using the sampler at this texture coordinate location.
-	textureColor = texture(shaderTexture, texCoord);
+	// sample the pixel colour from the texture using the sampler at this texture coordinate location.
+	textureColour = texture(shaderTexture, texCoord);
 
-	outputColor = textureColor;
+	outputColour = textureColour;
 }

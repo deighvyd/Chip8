@@ -24,6 +24,8 @@
     <ClCompile Include="src\ColourShader.cpp" />
     <ClCompile Include="src\Graphics.cpp" />
     <ClCompile Include="src\Input.cpp" />
+    <ClCompile Include="src\Light.cpp" />
+    <ClCompile Include="src\LightShader.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Model.cpp" />
     <ClCompile Include="src\OpenGL.cpp" />
@@ -41,6 +43,8 @@
     <ClInclude Include="src\ColourShader.h" />
     <ClInclude Include="src\Graphics.h" />
     <ClInclude Include="src\Input.h" />
+    <ClInclude Include="src\Light.h" />
+    <ClInclude Include="src\LightShader.h" />
     <ClInclude Include="src\Model.h" />
     <ClInclude Include="src\OpenGL.h" />
     <ClInclude Include="src\OpenGLDefines.h" />
@@ -52,6 +56,8 @@
   <ItemGroup>
     <None Include="shaders\Colour.ps" />
     <None Include="shaders\Colour.vs" />
+    <None Include="shaders\Light.ps" />
+    <None Include="shaders\Light.vs" />
     <None Include="shaders\Texture.ps" />
     <None Include="shaders\Texture.vs" />
   </ItemGroup>

@@ -8,8 +8,9 @@ class Model
 private:
 	struct Vertex
 	{
-		float x, y, z;
-		float tu, tv;
+		float x, y, z;		// position
+		float tu, tv;		// tex coords
+		float nx, ny, nz;	// normal
 	};
 
 public:

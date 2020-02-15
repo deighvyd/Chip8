@@ -4,9 +4,40 @@
 
 #include "OpenGL.h"
 #include "Camera.h"
+#include "Light.h"
 #include "Model.h"
 #include "ColourShader.h"
+#include "LightShader.h"
 #include "TextureShader.h"
+
+namespace detail
+{
+	template<class ShaderType>
+	bool InitShader(Shader*& shader, OpenGL* openGL, HWND hWnd)
+	{
+		if ((shader = new ShaderType()) == nullptr)
+		{
+			return false;
+		}
+
+		if (!shader->Initialize(openGL, hWnd))
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	void DestroyShader(Shader*& shader, OpenGL* openGL)
+	{
+		if (shader != nullptr)
+		{
+			shader->Shutdown(openGL);
+			delete shader;
+			shader = nullptr;
+		}
+	}
+}
 
 Graphics::Graphics()
 	: _openGL(nullptr)
@@ -14,6 +45,8 @@ Graphics::Graphics()
 	, _model(nullptr)
 	, _colourShader(nullptr)
 	, _textureShader(nullptr)
+	, _lightShader(nullptr)
+	, _light(nullptr)
 {
 }
 
@@ -41,53 +74,54 @@ bool Graphics::Initialize(OpenGL* openGL, HWND hWnd)
 		return false;
 	}
 
-	if (!_model->Initialize(_openGL, "textures/test.tga", 0, true))
+	if (!_model->Initialize(_openGL, "textures/stone.tga", 0, true))
 	{
 		MessageBox(hWnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}
 	
-	if ((_colourShader = new ColourShader()) == nullptr)
+	if (!detail::InitShader<ColourShader>(_colourShader, _openGL, hWnd))
 	{
+		MessageBox(hWnd, L"Could not initialize the colour shader object.", L"Error", MB_OK);
 		return false;
 	}
 
-	if (!_colourShader->Initialize(_openGL, hWnd))
-	{
-		MessageBox(hWnd, L"Could not initialize the color shader object.", L"Error", MB_OK);
-		return false;
-	}
-
-	if ((_textureShader = new TextureShader()) == nullptr)
-	{
-		return false;
-	}
-
-	if (!_textureShader->Initialize(openGL, hWnd))
+	if (!detail::InitShader<TextureShader>(_textureShader, _openGL, hWnd))
 	{
 		MessageBox(hWnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
 		return false;
 	}
+
+	if (!detail::InitShader<LightShader>(_lightShader, _openGL, hWnd))
+	{
+		MessageBox(hWnd, L"Could not initialize the light shader object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// create a light object
+	_light = new Light();
+	if (_light == nullptr)
+	{
+		return false;
+	}
+	_light->SetDiffuseColour(1.0f, 1.0f, 0.0f, 1.0f);
+	_light->SetDirection(0.0f, 0.0f, 1.0f);
 
 	return true;
 }
 
 void Graphics::Shutdown()
 {
-	if (_colourShader)
+	if (_light != nullptr)
 	{
-		_colourShader->Shutdown(_openGL);
-		delete _colourShader;
-		_colourShader = nullptr;
+		delete _light;
+		_light = nullptr;
 	}
 
-	if (_textureShader == nullptr)
-	{
-		_textureShader->Shutdown(_openGL);
-		delete _textureShader;
-		_textureShader = nullptr;
-	}
-
+	detail::DestroyShader(_lightShader, _openGL);
+	detail::DestroyShader(_textureShader, _openGL);
+	detail::DestroyShader(_colourShader, _openGL);
+	
 	if (_model)
 	{
 		_model->Shutdown(_openGL);
@@ -107,7 +141,16 @@ void Graphics::Shutdown()
 
 bool Graphics::RunFrame()
 {
-	if (!Render())
+	static float rotation = 0.0f;
+	
+	// rotate every frame
+	rotation += 0.0174532925f * 2.0f;
+	if (rotation > 360.0f)
+	{
+		rotation -= 360.0f;
+	}
+
+	if (!Render(rotation))
 	{
 		return false;
 	}
@@ -115,29 +158,40 @@ bool Graphics::RunFrame()
 	return true;
 }
 
-bool Graphics::Render()
+bool Graphics::Render(float rotation)
 {
 	_openGL->BeginScene(0.5f, 0.5f, 0.5f, 1.0f);
-
-	float worldMatrix[16];
-	float viewMatrix[16];
-	float projectionMatrix[16];
 
 	// setup the camera matrix
 	_camera->Render();
 
 	// get the world, view, and projection matrices from the opengl and camera objects.
+	float worldMatrix[16];
 	_openGL->GetWorldMatrix(worldMatrix);
+
+	float viewMatrix[16];
 	_camera->GetViewMatrix(viewMatrix);
+	
+	float projectionMatrix[16];
 	_openGL->GetProjectionMatrix(projectionMatrix);
+
+	float lightDirection[3];
+	_light->GetDirection(lightDirection);
+
+	float diffuseLightColor[4];
+	_light->GetDiffuseColour(diffuseLightColor);
+
+	// rotate the world matrix by the value passed in
+	_openGL->MatrixRotationY(worldMatrix, rotation);
 
 	// render the model using the shader
 
 	//Shader* shader = _colourShader;
-	Shader* shader = _textureShader;
+	//Shader* shader = _textureShader;
+	Shader* shader = _lightShader;
 	
 	shader->SetShader(_openGL);
-	shader->SetShaderParameters(_openGL, worldMatrix, viewMatrix, projectionMatrix);
+	shader->SetShaderParameters(_openGL, worldMatrix, viewMatrix, projectionMatrix, 0, lightDirection, diffuseLightColor);
 
 	_model->Render(_openGL);
 

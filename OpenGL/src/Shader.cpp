@@ -28,7 +28,7 @@ void Shader::SetShader(OpenGL* openGL)
 	openGL->glUseProgram(_shaderProgram);
 }
 
-bool Shader::SetShaderParameters(OpenGL* openGL, float* worldMatrix, float* viewMatrix, float* projectionMatrix, int textureUnit)
+bool Shader::SetShaderParameters(OpenGL* openGL, float* worldMatrix, float* viewMatrix, float* projectionMatrix, int textureUnit, float* lightDirection, float* diffuseLightColour)
 {
 	unsigned int location = openGL->glGetUniformLocation(_shaderProgram, "worldMatrix");
 	if (location == -1)
@@ -105,7 +105,8 @@ bool Shader::InitializeShader(const char* vsFilename, const char* fsFilename, Op
 	openGL->glAttachShader(_shaderProgram, _fragmentShader);
 
 	openGL->glBindAttribLocation(_shaderProgram, 0, "inputPosition");
-	openGL->glBindAttribLocation(_shaderProgram, 1, "inputColor");
+	openGL->glBindAttribLocation(_shaderProgram, 1, "inputColour");
+	openGL->glBindAttribLocation(_shaderProgram, 2, "inputNormal");
 
 	openGL->glLinkProgram(_shaderProgram);
 

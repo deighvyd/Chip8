@@ -29,7 +29,7 @@ bool TextureShader::Initialize(OpenGL* openGL, HWND hWnd)
 	return true;
 }
 
-bool TextureShader::SetShaderParameters(OpenGL* openGL, float* worldMatrix, float* viewMatrix, float* projectionMatrix, int textureUnit)
+bool TextureShader::SetShaderParameters(OpenGL* openGL, float* worldMatrix, float* viewMatrix, float* projectionMatrix, int textureUnit, float* lightDirection, float* diffuseLightColour)
 {
 	if (!Shader::SetShaderParameters(openGL, worldMatrix, viewMatrix, projectionMatrix))
 	{

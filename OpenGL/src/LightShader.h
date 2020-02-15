@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Shader.h"
+#include "TextureShader.h"
 
-class TextureShader : public Shader
+class LightShader : public TextureShader
 {
 public:
-	TextureShader();
-	TextureShader(const TextureShader& other);
-	virtual ~TextureShader();
+	LightShader();
+	LightShader(const LightShader& other);
+	virtual ~LightShader();
 
 	virtual bool Initialize(OpenGL* openGL, HWND hWnd) override;
 	virtual bool SetShaderParameters(OpenGL* openGL, 

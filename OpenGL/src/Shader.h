@@ -19,7 +19,9 @@ public:
 									 float* worldMatrix, 
 									 float* viewMatrix, 
 									 float* projectionMatrix,
-									 int textureUnit = 0);
+									 int textureUnit = 0,
+									 float* lightDirection = nullptr, 
+									 float* diffuseLightColour = nullptr);
 
 protected:
 	bool InitializeShader(const char* vsFilename, const char* fsFilename, OpenGL* openGL, HWND hWnd);

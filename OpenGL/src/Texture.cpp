@@ -93,7 +93,7 @@ bool Texture::LoadTarga(OpenGL* openGL, const char* filename, unsigned int textu
 	glBindTexture(GL_TEXTURE_2D, _textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_BGRA, GL_UNSIGNED_BYTE, targaImage);
 
-	// det the texture color to either wrap around or clamp to the edge.
+	// det the texture colour to either wrap around or clamp to the edge.
 	if (wrap)
 	{
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

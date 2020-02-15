@@ -67,24 +67,36 @@ bool Model::InitializeBuffers(OpenGL *openGL)
 	vertices[0].y = -1.0f;
 	vertices[0].z =  0.0f;
 
-	vertices[0].tu = 0.0f;  // texture coordinates
+	vertices[0].tu = 0.0f;  // texture coords
 	vertices[0].tv = 0.0f;
+
+	vertices[0].nx =  0.0f;  // normal
+	vertices[0].ny =  0.0f;
+	vertices[0].nz = -1.0f;
 
 	// top middle
 	vertices[1].x = 0.0f;  // position
 	vertices[1].y = 1.0f;
 	vertices[1].z = 0.0f;
 
-	vertices[1].tu = 0.5f;  // texture coordinates
+	vertices[1].tu = 0.5f;  // texture coords
 	vertices[1].tv = 1.0f;
+
+	vertices[1].nx =  0.0f;  // normal
+	vertices[1].ny =  0.0f;
+	vertices[1].nz = -1.0f;
 
 	// bottom right
 	vertices[2].x =  1.0f;  // position
 	vertices[2].y = -1.0f;
 	vertices[2].z =  0.0f;
 
-	vertices[2].tu = 1.0f;  // texture coordinates
+	vertices[2].tu = 1.0f;  // texture coords
 	vertices[2].tv = 0.0f;
+
+	vertices[2].nx =  0.0f;  // normal
+	vertices[2].ny =  0.0f;
+	vertices[2].nz = -1.0f;
 
 	// load the index array with data
 	indices[0] = 0;  // bottom left
@@ -100,13 +112,18 @@ bool Model::InitializeBuffers(OpenGL *openGL)
 	openGL->glBufferData(GL_ARRAY_BUFFER, _vertexCount * sizeof(Vertex), vertices, GL_STATIC_DRAW);
 
 	openGL->glEnableVertexAttribArray(0);  // vertex position
-	openGL->glEnableVertexAttribArray(1);  // texture coordinates
+	openGL->glEnableVertexAttribArray(1);  // texture coordinate
+	openGL->glEnableVertexAttribArray(2);  // mormal
 
+	// set the formats (striding)
 	openGL->glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferId);
 	openGL->glVertexAttribPointer(0, 3, GL_FLOAT, false, sizeof(Vertex), 0);
 
 	openGL->glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferId);
 	openGL->glVertexAttribPointer(1, 2, GL_FLOAT, false, sizeof(Vertex), (unsigned char*)NULL + (3 * sizeof(float)));
+
+	openGL->glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferId);
+	openGL->glVertexAttribPointer(2, 3, GL_FLOAT, false, sizeof(Vertex), (unsigned char*)NULL + (5 * sizeof(float)));
 
 	// create and bind index buffer
 	openGL->glGenBuffers(1, &_indexBufferId);
