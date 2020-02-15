@@ -21,7 +21,7 @@ TextureShader::~TextureShader()
 
 bool TextureShader::Initialize(OpenGL* openGL, HWND hWnd)
 {
-	if (!InitializeShader("shaders/Texture.vs", "shaders/Texture.ps", openGL, hWnd))
+	if (!InitializeShader("shaders/texture.vs", "shaders/texture.ps", openGL, hWnd))
 	{
 		return false;
 	}

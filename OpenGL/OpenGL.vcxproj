@@ -54,17 +54,18 @@
     <ClInclude Include="src\TextureShader.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\Colour.ps" />
-    <None Include="shaders\Colour.vs" />
-    <None Include="shaders\Light.ps" />
-    <None Include="shaders\Light.vs" />
-    <None Include="shaders\Texture.ps" />
-    <None Include="shaders\Texture.vs" />
+    <None Include="shaders\colour.ps" />
+    <None Include="shaders\colour.vs" />
+    <None Include="shaders\light.ps" />
+    <None Include="shaders\light.vs" />
+    <None Include="shaders\texture.ps" />
+    <None Include="shaders\texture.vs" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="models\Cube.txt" />
+    <Text Include="models\cube.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="textures\opengl.tga" />
     <Image Include="textures\stone.tga" />
     <Image Include="textures\test.tga" />
   </ItemGroup>

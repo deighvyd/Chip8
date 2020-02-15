@@ -103,29 +103,24 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\Colour.vs">
+    <None Include="shaders\colour.vs">
       <Filter>shaders</Filter>
     </None>
-    <None Include="shaders\Colour.ps">
+    <None Include="shaders\colour.ps">
       <Filter>shaders</Filter>
     </None>
-    <None Include="shaders\Texture.vs">
+    <None Include="shaders\light.ps">
       <Filter>shaders</Filter>
     </None>
-    <None Include="shaders\Texture.ps">
+    <None Include="shaders\light.vs">
       <Filter>shaders</Filter>
     </None>
-    <None Include="shaders\Light.ps">
+    <None Include="shaders\texture.ps">
       <Filter>shaders</Filter>
     </None>
-    <None Include="shaders\Light.vs">
+    <None Include="shaders\texture.vs">
       <Filter>shaders</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="models\Cube.txt">
-      <Filter>models</Filter>
-    </Text>
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\stone.tga">
@@ -134,5 +129,13 @@
     <Image Include="textures\test.tga">
       <Filter>textures</Filter>
     </Image>
+    <Image Include="textures\opengl.tga">
+      <Filter>textures</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="models\cube.txt">
+      <Filter>models</Filter>
+    </Text>
   </ItemGroup>
 </Project>

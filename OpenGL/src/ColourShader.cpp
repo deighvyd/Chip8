@@ -21,7 +21,7 @@ ColourShader::~ColourShader()
 
 bool ColourShader::Initialize(OpenGL* openGL, HWND hWnd)
 {
-	if (!InitializeShader("shaders/Colour.vs", "shaders/Colour.ps", openGL, hWnd))
+	if (!InitializeShader("shaders/colour.vs", "shaders/colour.ps", openGL, hWnd))
 	{
 		return false;
 	}

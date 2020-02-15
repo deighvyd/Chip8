@@ -74,7 +74,7 @@ bool Graphics::Initialize(OpenGL* openGL, HWND hWnd)
 		return false;
 	}
 
-	if (!_model->Initialize(_openGL, "models/Cube.txt", "textures/stone.tga", 0, true))
+	if (!_model->Initialize(_openGL, "models/cube.txt", "textures/stone.tga", 0, true))
 	{
 		MessageBox(hWnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
