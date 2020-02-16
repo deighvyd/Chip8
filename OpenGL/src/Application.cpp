@@ -179,8 +179,8 @@ bool Application::InitializeWindows(OpenGL* openGL, int& screenWidth, int& scree
 	
 	RegisterClassEx(&wc);
 
-	// create a temporary window for the OpenGL extension setup.
-	_hWnd = CreateWindowEx(WS_EX_APPWINDOW, _name, _name, WS_POPUP, 0, 0, 640, 480, nullptr, nullptr, _hInstance, nullptr);
+	// create a temporary window for the OpenGL extension setup
+	_hWnd = CreateWindowEx(WS_EX_APPWINDOW, _name, _name, WS_OVERLAPPEDWINDOW, 0, 0, 640, 480, nullptr, nullptr, _hInstance, nullptr);
 	if (_hWnd == nullptr)
 	{
 		return false;
@@ -224,8 +224,22 @@ bool Application::InitializeWindows(OpenGL* openGL, int& screenWidth, int& scree
 		posY = (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
 	}
 
-	// create the window with the screen settings and get the handle to it.
-	_hWnd = CreateWindowEx(WS_EX_APPWINDOW, _name, _name, WS_POPUP, posX, posY, screenWidth, screenHeight, nullptr, nullptr, _hInstance, nullptr);
+	RECT wRect;			
+	wRect.left =	(long)0;
+	wRect.right =	(long)screenWidth;
+	wRect.top =		(long)0;
+	wRect.bottom =	(long)screenHeight;
+
+	DWORD wStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
+
+	if (!AdjustWindowRectEx(&wRect, WS_OVERLAPPEDWINDOW, false, wStyle))
+	{
+		MessageBox(_hWnd, L"Could adjust the window rectangle", L"Error", MB_OK);
+		return false;
+	}
+
+	// create the window with the screen settings and get the handle to it
+	_hWnd = CreateWindowEx(wStyle, _name, _name, WS_OVERLAPPEDWINDOW  | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, posX, posY, wRect.right - wRect.left, wRect.bottom - wRect.top, nullptr, nullptr, _hInstance, nullptr);
 	if (_hWnd == nullptr)
 	{
 		return false;
@@ -242,16 +256,11 @@ bool Application::InitializeWindows(OpenGL* openGL, int& screenWidth, int& scree
 	SetForegroundWindow(_hWnd);
 	SetFocus(_hWnd);
 
-	// hide the mouse cursor.
-	ShowCursor(false);
-
 	return true;
 }
 
 void Application::ShutdownWindows()
 {
-	ShowCursor(true);
-
 	if (Graphics::FullScreen)
 	{
 		ChangeDisplaySettings(nullptr, 0);
