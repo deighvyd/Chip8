@@ -13,6 +13,9 @@
     <Filter Include="textures">
       <UniqueIdentifier>{2e410ab7-6ee7-4fb9-91df-56e8c1c8d8e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\imgui">
+      <UniqueIdentifier>{b4615862-c7ea-4ddb-bc00-4705944d02fb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Graphics.cpp">
@@ -55,6 +58,21 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Light.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui_demo.cpp">
+      <Filter>src\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui_draw.cpp">
+      <Filter>src\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui.cpp">
+      <Filter>src\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui_widgets.cpp">
+      <Filter>src\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Gui.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -101,6 +119,27 @@
     <ClInclude Include="src\Light.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\imgui\imgui.h">
+      <Filter>src\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\imconfig.h">
+      <Filter>src\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\imgui_internal.h">
+      <Filter>src\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\imstb_textedit.h">
+      <Filter>src\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\imstb_rectpack.h">
+      <Filter>src\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\imstb_truetype.h">
+      <Filter>src\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Gui.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\colour.vs">
@@ -136,6 +175,9 @@
   <ItemGroup>
     <Text Include="models\cube.txt">
       <Filter>models</Filter>
+    </Text>
+    <Text Include="src\imgui\LICENSE.txt">
+      <Filter>src\imgui</Filter>
     </Text>
   </ItemGroup>
 </Project>

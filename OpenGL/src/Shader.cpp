@@ -54,30 +54,44 @@ bool Shader::SetShaderParameters(OpenGL* openGL, float* worldMatrix, float* view
 	return true;
 }
 
-bool Shader::InitializeShader(const char* vsFilename, const char* fsFilename, OpenGL* openGL, HWND hWnd)
+void Shader::BindAttributes(OpenGL* openGL) const
 {
-	const char *vertexShaderBuffer = LoadShaderSourceFile(vsFilename);
-	if (vertexShaderBuffer == nullptr)
+	openGL->glBindAttribLocation(_shaderProgram, 0, "inputPosition");
+	openGL->glBindAttribLocation(_shaderProgram, 1, "inputColour");
+	openGL->glBindAttribLocation(_shaderProgram, 2, "inputNormal");
+}
+
+bool Shader::LoadShader(const char* vsFilename, const char* fsFilename, OpenGL* openGL, HWND hWnd)
+{
+	const char *vsSource = LoadShaderSourceFile(vsFilename);
+	if (vsSource == nullptr)
 	{
 		return false;
 	}
 
-	const char *fragmentShaderBuffer = LoadShaderSourceFile(fsFilename);
-	if (fragmentShaderBuffer == nullptr)
+	const char *fsSource = LoadShaderSourceFile(fsFilename);
+	if (fsSource == nullptr)
 	{
 		return false;
 	}
 
+	bool result = CompileShader(vsSource, fsSource, openGL, hWnd);
+
+	delete [] vsSource;
+	delete [] fsSource;
+	vsSource = fsSource = nullptr;
+
+	return result;
+}
+
+bool Shader::CompileShader(const char* vsSource, const char* fsSource, OpenGL* openGL, HWND hWnd)
+{
 	// load and copile the shaders
 	_vertexShader = openGL->glCreateShader(GL_VERTEX_SHADER);
 	_fragmentShader = openGL->glCreateShader(GL_FRAGMENT_SHADER);
 
-	openGL->glShaderSource(_vertexShader, 1, &vertexShaderBuffer, nullptr);
-	openGL->glShaderSource(_fragmentShader, 1, &fragmentShaderBuffer, nullptr);
-
-	delete [] vertexShaderBuffer;
-	delete [] fragmentShaderBuffer;
-	vertexShaderBuffer = fragmentShaderBuffer = nullptr;
+	openGL->glShaderSource(_vertexShader, 1, &vsSource, nullptr);
+	openGL->glShaderSource(_fragmentShader, 1, &fsSource, nullptr);
 
 	openGL->glCompileShader(_vertexShader);
 	openGL->glCompileShader(_fragmentShader);
@@ -87,14 +101,14 @@ bool Shader::InitializeShader(const char* vsFilename, const char* fsFilename, Op
 	openGL->glGetShaderiv(_vertexShader, GL_COMPILE_STATUS, &status);
 	if (status != 1)
 	{
-		OutputShaderErrorMessage(openGL, hWnd, _vertexShader, vsFilename);
+		OutputShaderErrorMessage(openGL, hWnd, _vertexShader, vsSource);
 		return false;
 	}
 
 	openGL->glGetShaderiv(_fragmentShader, GL_COMPILE_STATUS, &status);
 	if (status != 1)
 	{
-		OutputShaderErrorMessage(openGL, hWnd, _fragmentShader, fsFilename);
+		OutputShaderErrorMessage(openGL, hWnd, _fragmentShader, vsSource);
 		return false;
 	}
 
@@ -104,9 +118,7 @@ bool Shader::InitializeShader(const char* vsFilename, const char* fsFilename, Op
 	openGL->glAttachShader(_shaderProgram, _vertexShader);
 	openGL->glAttachShader(_shaderProgram, _fragmentShader);
 
-	openGL->glBindAttribLocation(_shaderProgram, 0, "inputPosition");
-	openGL->glBindAttribLocation(_shaderProgram, 1, "inputColour");
-	openGL->glBindAttribLocation(_shaderProgram, 2, "inputNormal");
+	BindAttributes(openGL);
 
 	openGL->glLinkProgram(_shaderProgram);
 

@@ -142,7 +142,7 @@ bool OpenGL::InitializeOpenGL(HWND hWnd, int screenWidth, int screenHeight, floa
 	float fieldOfView = 3.14159265358979323846f / 4.0f;
 	float screenAspect = (float)screenWidth / (float)screenHeight;
 
-	BuildPerspectiveFovLHMatrix(_projectionMatrix, fieldOfView, screenAspect, screenNear, screenDepth);
+	//BuildPerspectiveFovLHMatrix(_projectionMatrix, fieldOfView, screenAspect, screenNear, screenDepth);
 
 	char *vendorString = (char*)glGetString(GL_VENDOR);
 	char *rendererString = (char*)glGetString(GL_RENDERER);
@@ -213,6 +213,7 @@ bool OpenGL::LoadExtensionList()
 
 	BIND_GL_FUNCTION(glAttachShader, PFNGLATTACHSHADERPROC)
 	BIND_GL_FUNCTION(glBindBuffer, PFNGLBINDBUFFERPROC)
+	BIND_GL_FUNCTION(glBindSampler, PFNGLBINDSAMPLERPROC)
 	BIND_GL_FUNCTION(glBindVertexArray, PFNGLBINDVERTEXARRAYPROC)
 	BIND_GL_FUNCTION(glBufferData, PFNGLBUFFERDATAPROC)
 	BIND_GL_FUNCTION(glCompileShader, PFNGLCOMPILESHADERPROC)
@@ -343,6 +344,38 @@ void OpenGL::BuildPerspectiveFovLHMatrix(float *matrix, float fieldOfView, float
 	matrix[13] = 0.0f;
 	matrix[14] = (-screenNear * screenDepth) / (screenDepth - screenNear);
 	matrix[15] = 0.0f;
+}
+
+void OpenGL::BuildOrthographicMatrix(float left, float right, float top, float bottom)
+{
+	float L = left, R = right, T = top, B = bottom;
+	const float orthoProj[4][4] =
+    {
+        { 2.0f/(R-L),   0.0f,         0.0f,   0.0f },
+        { 0.0f,         2.0f/(T-B),   0.0f,   0.0f },
+        { 0.0f,         0.0f,        -1.0f,   0.0f },
+        { (R+L)/(L-R),  (T+B)/(B-T),  0.0f,   1.0f },
+    };
+
+	_projectionMatrix[0] = orthoProj[0][0];
+	_projectionMatrix[1] = orthoProj[0][1];
+	_projectionMatrix[2] = orthoProj[0][2];
+	_projectionMatrix[3] = orthoProj[0][3];
+
+	_projectionMatrix[4] = orthoProj[1][0];
+	_projectionMatrix[5] = orthoProj[1][1];
+	_projectionMatrix[6] = orthoProj[1][2];
+	_projectionMatrix[7] = orthoProj[1][3];
+
+	_projectionMatrix[8] = orthoProj[2][0];
+	_projectionMatrix[9] = orthoProj[2][1];
+	_projectionMatrix[10] = orthoProj[2][2];
+	_projectionMatrix[11] = orthoProj[2][3];
+
+	_projectionMatrix[12] = orthoProj[3][0];
+	_projectionMatrix[13] = orthoProj[3][1];
+	_projectionMatrix[14] = orthoProj[3][2];
+	_projectionMatrix[15] = orthoProj[3][3];
 }
 
 void OpenGL::MatrixRotationY(float *matrix, float angle)

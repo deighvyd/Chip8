@@ -1,10 +1,11 @@
 #pragma once
 
-class OpenGL;
 class Camera;
-class Model;
-class Shader;
+class Gui;
 class Light;
+class Model;
+class OpenGL;
+class Shader;
 
 class Graphics
 {
@@ -21,10 +22,10 @@ public:
 
 	bool Initialize(OpenGL* openGL, HWND hwnd);
 	void Shutdown();
-	bool RunFrame();
+	bool RunFrame(HWND hWnd);
 
 private:
-	bool Render(float rotation);
+	bool Render(HWND hWnd, float rotation);
 
 private:
 	OpenGL* _openGL;
@@ -36,5 +37,7 @@ private:
 	Shader* _lightShader;
 
 	Light* _light;
+
+	Gui* _gui;
 
 };

@@ -24,16 +24,21 @@ public:
 									 float* diffuseLightColour = nullptr,
 									 float* ambientLight = nullptr);
 
+	GLuint GetShaderHandle() const { return _shaderProgram; }
+
 protected:
-	bool InitializeShader(const char* vsFilename, const char* fsFilename, OpenGL* openGL, HWND hWnd);
+	virtual void BindAttributes(OpenGL* openGL) const;
+
+	bool LoadShader(const char* vsFilename, const char* fsFilename, OpenGL* openGL, HWND hWnd);
+	bool CompileShader(const char* vsSource, const char* fsSource, OpenGL* openGL, HWND hWnd);
 	char* LoadShaderSourceFile(const char* filename);
 	void OutputShaderErrorMessage(OpenGL* openGL, HWND hWnd, unsigned int shaderId, const char* shaderFilename);
 	void OutputLinkerErrorMessage(OpenGL* openGL, HWND hWnd, unsigned int programId);
 	void ShutdownShader(OpenGL* openGL);
 
 protected:
-	unsigned int _vertexShader;
-	unsigned int _fragmentShader;
-	unsigned int _shaderProgram;
+	GLuint _vertexShader;
+	GLuint _fragmentShader;
+	GLuint _shaderProgram;
 
 };

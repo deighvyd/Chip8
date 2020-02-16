@@ -21,7 +21,7 @@ TextureShader::~TextureShader()
 
 bool TextureShader::Initialize(OpenGL* openGL, HWND hWnd)
 {
-	if (!InitializeShader("shaders/texture.vs", "shaders/texture.ps", openGL, hWnd))
+	if (!LoadShader("shaders/texture.vs", "shaders/texture.ps", openGL, hWnd))
 	{
 		return false;
 	}
@@ -41,7 +41,7 @@ bool TextureShader::SetShaderParameters(OpenGL* openGL, float* worldMatrix, floa
 	{
 		return false;
 	}
-	
 	openGL->glUniform1i(location, textureUnit);
+	
 	return true;
 }

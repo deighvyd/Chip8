@@ -23,6 +23,23 @@
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\ColourShader.cpp" />
     <ClCompile Include="src\Graphics.cpp" />
+    <ClCompile Include="src\Gui.cpp" />
+    <ClCompile Include="src\imgui\imgui.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui_demo.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui_draw.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui_widgets.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\LightShader.cpp" />
@@ -42,6 +59,13 @@
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\ColourShader.h" />
     <ClInclude Include="src\Graphics.h" />
+    <ClInclude Include="src\Gui.h" />
+    <ClInclude Include="src\imgui\imconfig.h" />
+    <ClInclude Include="src\imgui\imgui.h" />
+    <ClInclude Include="src\imgui\imgui_internal.h" />
+    <ClInclude Include="src\imgui\imstb_rectpack.h" />
+    <ClInclude Include="src\imgui\imstb_textedit.h" />
+    <ClInclude Include="src\imgui\imstb_truetype.h" />
     <ClInclude Include="src\Input.h" />
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\LightShader.h" />
@@ -63,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="models\cube.txt" />
+    <Text Include="src\imgui\LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\opengl.tga" />
@@ -125,6 +150,7 @@
     <LinkIncremental>true</LinkIncremental>
     <IntDir>build\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)build\$(Configuration)\</OutDir>
+    <IncludePath>$(ProjectDir)vendor\OpenGL;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -133,6 +159,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)build\$(Configuration)\</OutDir>
     <IntDir>build\$(Configuration)\</IntDir>
+    <IncludePath>$(ProjectDir)vendor\OpenGL;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>

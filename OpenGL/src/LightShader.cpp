@@ -21,7 +21,7 @@ LightShader::~LightShader()
 
 bool LightShader::Initialize(OpenGL* openGL, HWND hWnd)
 {
-	if (!InitializeShader("shaders/light.vs", "shaders/light.ps", openGL, hWnd))
+	if (!LoadShader("shaders/light.vs", "shaders/light.ps", openGL, hWnd))
 	{
 		return false;
 	}

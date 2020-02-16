@@ -2,10 +2,12 @@
 
 #include "Graphics.h"
 
-#include "OpenGL.h"
 #include "Camera.h"
+#include "Gui.h"
 #include "Light.h"
 #include "Model.h"
+#include "OpenGL.h"
+
 #include "ColourShader.h"
 #include "LightShader.h"
 #include "TextureShader.h"
@@ -47,6 +49,7 @@ Graphics::Graphics()
 	, _textureShader(nullptr)
 	, _lightShader(nullptr)
 	, _light(nullptr)
+	, _gui(nullptr)
 {
 }
 
@@ -99,8 +102,7 @@ bool Graphics::Initialize(OpenGL* openGL, HWND hWnd)
 	}
 
 	// create a light object
-	_light = new Light();
-	if (_light == nullptr)
+	if ((_light = new Light()) == nullptr)
 	{
 		return false;
 	}
@@ -109,12 +111,31 @@ bool Graphics::Initialize(OpenGL* openGL, HWND hWnd)
 	_light->SetDirection(1.0f, 0.0f, 0.0f);
 	_light->SetAmbientLight(0.15f, 0.15f, 0.15f, 1.0f);
 
+	// create and initialize the Gui
+	if ((_gui = new Gui()) == nullptr)
+	{
+		MessageBox(hWnd, L"Could not create the Gui.", L"Error", MB_OK);
+		return false;
+	}
+	
+	if (!_gui->Initialize(_openGL, hWnd))
+	{
+		MessageBox(hWnd, L"Could not initliaze the Gui.", L"Error", MB_OK);
+		return false;
+	}
 
 	return true;
 }
 
 void Graphics::Shutdown()
 {
+	if (_gui != nullptr)
+	{
+		_gui->Shutdown(_openGL);
+		delete _gui;
+		_gui = nullptr;
+	}
+
 	if (_light != nullptr)
 	{
 		delete _light;
@@ -142,7 +163,7 @@ void Graphics::Shutdown()
 	return;
 }
 
-bool Graphics::RunFrame()
+bool Graphics::RunFrame(HWND hWnd)
 {
 	static float rotation = 0.0f;
 	
@@ -153,7 +174,7 @@ bool Graphics::RunFrame()
 		rotation -= 360.0f;
 	}
 
-	if (!Render(rotation))
+	if (!Render(hWnd, rotation))
 	{
 		return false;
 	}
@@ -161,7 +182,7 @@ bool Graphics::RunFrame()
 	return true;
 }
 
-bool Graphics::Render(float rotation)
+bool Graphics::Render(HWND hWnd, float rotation)
 {
 	_openGL->BeginScene(0.5f, 0.5f, 0.5f, 1.0f);
 
@@ -200,6 +221,8 @@ bool Graphics::Render(float rotation)
 	shader->SetShaderParameters(_openGL, worldMatrix, viewMatrix, projectionMatrix, 0, lightDirection, diffuseLightColor, ambientLight);
 
 	_model->Render(_openGL);
+
+	_gui->Render(_openGL, hWnd);
 
 	_openGL->EndScene();
 

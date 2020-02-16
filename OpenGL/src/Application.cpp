@@ -122,7 +122,7 @@ bool Application::RunFrame()
 		return false;
 	}
 
-	bool result = _graphics->RunFrame();
+	bool result = _graphics->RunFrame(_hWnd);
 	if (!result)
 	{
 		return false;
