@@ -1,7 +1,5 @@
 #pragma once
 
-#include "OpenGLDefines.h"
-
 class OpenGL
 {
 public:
@@ -22,7 +20,6 @@ public:
 
 	void BuildIdentityMatrix(float *matrix);
 	void BuildPerspectiveFovLHMatrix(float *matrix, float fieldOfView, float screenAspect, float screenNear, float screenDepth);
-	void BuildOrthographicMatrix(float left, float right, float top, float bottom);
 	void MatrixRotationY(float *matrix, float angle);
 	void MatrixTranslation(float *matrix, float x, float y, float z);
 	void MatrixMultiply(float *result, float *matrix1, float *matrix2);
@@ -47,6 +44,7 @@ public:
 	PFNGLBINDBUFFERPROC glBindBuffer;
 	PFNGLBINDSAMPLERPROC glBindSampler;
 	PFNGLBINDVERTEXARRAYPROC glBindVertexArray;
+	PFNGLBLENDEQUATIONPROC glBlendEquation;
 	PFNGLBUFFERDATAPROC glBufferData;
 	PFNGLCOMPILESHADERPROC glCompileShader;
 	PFNGLCREATEPROGRAMPROC glCreateProgram;

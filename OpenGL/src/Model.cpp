@@ -50,6 +50,13 @@ void Model::Shutdown(OpenGL *openGL)
 
 void Model::Render(OpenGL *openGL)
 {
+	// setup the render state
+	glEnable(GL_DEPTH_TEST);
+	glFrontFace(GL_CW);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glDisable(GL_SCISSOR_TEST);
+
 	RenderBuffers(openGL);
 }
 

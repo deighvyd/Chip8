@@ -86,9 +86,6 @@
     <ClInclude Include="src\OpenGL.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\OpenGLDefines.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\pch.h">
       <Filter>src</Filter>
     </ClInclude>

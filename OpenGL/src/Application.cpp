@@ -99,14 +99,29 @@ void Application::Run()
 			DispatchMessage(&msg);
 		}
 
-		if (msg.message == WM_QUIT)
+		switch (msg.message)
 		{
-			done = true;
+			case WM_QUIT:
+			{
+				done = true;
+				break;
+			}
+
+			/*case WM_SIZE:
+			{
+				glViewport(0, 0, (GLsizei)LOWORD(msg.lParam), (GLsizei)HIWORD(msg.lParam)); 
+				break;
+			}*/
+
+			default:
+			{
+				break;
+			}
 		}
-		else
+		
+		if (!done)
 		{
-			bool result = RunFrame();
-			if(!result)
+			if (!RunFrame())
 			{
 				done = true;
 			}
@@ -218,8 +233,8 @@ bool Application::InitializeWindows(OpenGL* openGL, int& screenWidth, int& scree
 	}
 	else
 	{
-		screenWidth  = 800;
-		screenHeight = 600;
+		screenWidth  = 1280;
+		screenHeight = 720;
 		posX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth)  / 2;
 		posY = (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
 	}

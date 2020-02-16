@@ -199,7 +199,7 @@ bool Gui::Initialize(OpenGL* openGL, HWND hWnd)
     //    g_PrevUserCallbackChar = glfwSetCharCallback(window, ImGui_ImplGlfw_CharCallback);
     //}
 
-    io.Fonts->AddFontDefault();
+    //io.Fonts->AddFontDefault();
     //io.Fonts->AddFontFromFileTTF("fonts/roboto-medium.ttf", 16.0f);
     //io.Fonts->AddFontFromFileTTF("fonts/cousine-regular.ttf", 15.0f);
     //io.Fonts->AddFontFromFileTTF("fonts/droidsans.ttf", 16.0f);
@@ -219,8 +219,6 @@ bool Gui::Initialize(OpenGL* openGL, HWND hWnd)
 //    glBindVertexArray(last_vertex_array);
 //#endif
 
-    BuildFonts();
-
     //g_ClientApi = client_api;
     return true;
 }
@@ -237,13 +235,6 @@ void Gui::Shutdown(OpenGL* openGL)
 
 void Gui::Render(OpenGL* openGL, HWND hWnd)
 {
-    detail::GuiShader->SetShader(openGL);
-
-    // TODO - build the projection matrix (ortho???)
-    //float projMatrix[16];
-
-	//detail::GuiShader->SetShaderParameters(openGL, nullptr, nullptr, projMatrix, 0, nullptr, nullptr, nullptr);
-
     NewFrame(hWnd);
 
     // some demo code
@@ -288,6 +279,7 @@ void Gui::Render(OpenGL* openGL, HWND hWnd)
     // render
     ImGui::Render();
 
+
     GLint dims[4] = {0};
     glGetIntegerv(GL_VIEWPORT, dims);
     GLint displayWidth = dims[2];
@@ -305,42 +297,9 @@ void Gui::Render(OpenGL* openGL, HWND hWnd)
         return;
     }
 
-    // backup GL state
-    /*GLenum lastActiveTexture;  
-    glGetIntegerv(GL_TEXTURE0, (GLint*)&lastActiveTexture);*/
-
     openGL->glActiveTexture(GL_TEXTURE0);
     
-    //GLint last_program; glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
-    //GLint last_texture; glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture);
-#ifdef GL_SAMPLER_BINDING
-    GLint last_sampler; glGetIntegerv(GL_SAMPLER_BINDING, &last_sampler);
-#endif
-    //GLint last_array_buffer; glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &last_array_buffer);
-#ifndef IMGUI_IMPL_OPENGL_ES2
-    //GLint last_vertex_array_object; glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &last_vertex_array_object);
-#endif
-#ifdef GL_POLYGON_MODE
-    //GLint last_polygon_mode[2]; glGetIntegerv(GL_POLYGON_MODE, last_polygon_mode);
-#endif
-    /*GLint last_viewport[4]; glGetIntegerv(GL_VIEWPORT, last_viewport);
-    GLint last_scissor_box[4]; glGetIntegerv(GL_SCISSOR_BOX, last_scissor_box);
-    GLenum last_blend_src_rgb; glGetIntegerv(GL_BLEND_SRC_RGB, (GLint*)&last_blend_src_rgb);
-    GLenum last_blend_dst_rgb; glGetIntegerv(GL_BLEND_DST_RGB, (GLint*)&last_blend_dst_rgb);
-    GLenum last_blend_src_alpha; glGetIntegerv(GL_BLEND_SRC_ALPHA, (GLint*)&last_blend_src_alpha);
-    GLenum last_blend_dst_alpha; glGetIntegerv(GL_BLEND_DST_ALPHA, (GLint*)&last_blend_dst_alpha);
-    GLenum last_blend_equation_rgb; glGetIntegerv(GL_BLEND_EQUATION_RGB, (GLint*)&last_blend_equation_rgb);
-    GLenum last_blend_equation_alpha; glGetIntegerv(GL_BLEND_EQUATION_ALPHA, (GLint*)&last_blend_equation_alpha);
-    GLboolean last_enable_blend = glIsEnabled(GL_BLEND);
-    GLboolean last_enable_cull_face = glIsEnabled(GL_CULL_FACE);
-    GLboolean last_enable_depth_test = glIsEnabled(GL_DEPTH_TEST);
-    GLboolean last_enable_scissor_test = glIsEnabled(GL_SCISSOR_TEST);
-    */bool clip_origin_lower_left = true;
-#if defined(GL_CLIP_ORIGIN) && !defined(__APPLE__)
-    GLenum last_clip_origin = 0; glGetIntegerv(GL_CLIP_ORIGIN, (GLint*)&last_clip_origin); // Support for GL 4.5's glClipControl(GL_UPPER_LEFT)
-    if (last_clip_origin == GL_UPPER_LEFT)
-        clip_origin_lower_left = false;
-#endif
+    //bool clip_origin_lower_left = true;
 
     // Setup desired GL state
     // Recreate the VAO every time (this is to easily allow multiple GL contexts to be rendered to. VAO are not shared among GL contexts)
@@ -348,7 +307,7 @@ void Gui::Render(OpenGL* openGL, HWND hWnd)
     GLuint vertexArrayHandle = 0;
     openGL->glGenVertexArrays(1, &vertexArrayHandle);
     SetupRenderState(openGL, drawData, fbWidth, fbHeight, vertexArrayHandle);
-    
+
     // Will project scissor/clipping rectangles into framebuffer space
     ImVec2 clipOff = drawData->DisplayPos;         // (0,0) unless using multi-viewports
     ImVec2 clipScale = drawData->FramebufferScale; // (1,1) unless using retina display which are often (2,2)
@@ -376,20 +335,27 @@ void Gui::Render(OpenGL* openGL, HWND hWnd)
             }
             else
             {
+                
                 // Project scissor/clipping rectangles into framebuffer space
-                ImVec4 clip_rect;
-                clip_rect.x = (pcmd->ClipRect.x - clipOff.x) * clipScale.x;
-                clip_rect.y = (pcmd->ClipRect.y - clipOff.y) * clipScale.y;
-                clip_rect.z = (pcmd->ClipRect.z - clipOff.x) * clipScale.x;
-                clip_rect.w = (pcmd->ClipRect.w - clipOff.y) * clipScale.y;
+                ImVec4 clipRect;
+                clipRect.x = (pcmd->ClipRect.x - clipOff.x) * clipScale.x;
+                clipRect.y = (pcmd->ClipRect.y - clipOff.y) * clipScale.y;
+                clipRect.z = (pcmd->ClipRect.z - clipOff.x) * clipScale.x;
+                clipRect.w = (pcmd->ClipRect.w - clipOff.y) * clipScale.y;
 
-                if (clip_rect.x < fbWidth && clip_rect.y < fbHeight && clip_rect.z >= 0.0f && clip_rect.w >= 0.0f)
+                
+
+                if (clipRect.x < fbWidth && clipRect.y < fbHeight && clipRect.z >= 0.0f && clipRect.w >= 0.0f)
                 {
                     // Apply scissor/clipping rectangle
-                    if (clip_origin_lower_left)
-                        glScissor((int)clip_rect.x, (int)(fbHeight - clip_rect.w), (int)(clip_rect.z - clip_rect.x), (int)(clip_rect.w - clip_rect.y));
-                    else
-                        glScissor((int)clip_rect.x, (int)clip_rect.y, (int)clip_rect.z, (int)clip_rect.w); // Support for GL 4.5 rarely used glClipControl(GL_UPPER_LEFT)
+                    //if (clip_origin_lower_left)
+                    //{
+                    //    glScissor((int)clipRect.x, (int)(fbHeight - clipRect.w), (int)(clipRect.z - clipRect.x), (int)(clipRect.w - clipRect.y));
+                    //}
+                    //else
+                    //{
+                    //    glScissor((int)clipRect.x, (int)clipRect.y, (int)clipRect.z, (int)clipRect.w); // Support for GL 4.5 rarely used glClipControl(GL_UPPER_LEFT)
+                    //}
 
                     // Bind texture, Draw
                     glBindTexture(GL_TEXTURE_2D, (GLuint)(intptr_t)pcmd->TextureId);
@@ -400,48 +366,24 @@ void Gui::Render(OpenGL* openGL, HWND hWnd)
 #endif
                     glDrawElements(GL_TRIANGLES, (GLsizei)pcmd->ElemCount, sizeof(ImDrawIdx) == 2 ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT, (void*)(intptr_t)(pcmd->IdxOffset * sizeof(ImDrawIdx)));
                 }
+                
             }
         }
+        
     }
 
-    // Destroy the temporary VAO
-#ifndef IMGUI_IMPL_OPENGL_ES2
+    // destroy the temporary VAO
     openGL->glDeleteVertexArrays(1, &vertexArrayHandle);
-#endif
-
-    // Restore modified GL state
-    /*openGL->glUseProgram(last_program);
-    glBindTexture(GL_TEXTURE_2D, last_texture);
-#ifdef GL_SAMPLER_BINDING
-    glBindSampler(0, last_sampler);
-#endif
-    glActiveTexture(lastActiveTexture);
-#ifndef IMGUI_IMPL_OPENGL_ES2
-    glBindVertexArray(last_vertex_array_object);
-#endif
-    glBindBuffer(GL_ARRAY_BUFFER, last_array_buffer);
-    glBlendEquationSeparate(last_blend_equation_rgb, last_blend_equation_alpha);
-    glBlendFuncSeparate(last_blend_src_rgb, last_blend_dst_rgb, last_blend_src_alpha, last_blend_dst_alpha);
-    if (last_enable_blend) glEnable(GL_BLEND); else glDisable(GL_BLEND);
-    if (last_enable_cull_face) glEnable(GL_CULL_FACE); else glDisable(GL_CULL_FACE);
-    if (last_enable_depth_test) glEnable(GL_DEPTH_TEST); else glDisable(GL_DEPTH_TEST);
-    if (last_enable_scissor_test) glEnable(GL_SCISSOR_TEST); else glDisable(GL_SCISSOR_TEST);
-#ifdef GL_POLYGON_MODE
-    glPolygonMode(GL_FRONT_AND_BACK, (GLenum)last_polygon_mode[0]);
-#endif
-    glViewport(last_viewport[0], last_viewport[1], (GLsizei)last_viewport[2], (GLsizei)last_viewport[3]);
-    glScissor(last_scissor_box[0], last_scissor_box[1], (GLsizei)last_scissor_box[2], (GLsizei)last_scissor_box[3]);*/
-
 }
 
 bool Gui::SetupRenderState(OpenGL* openGL, ImDrawData* drawData, int fbWidth, int fbHeight, GLuint vertexArrayHandle)
 {
     glEnable(GL_BLEND);
-    //glBlendEquation(GL_FUNC_ADD);
+    openGL->glBlendEquation(GL_FUNC_ADD);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDisable(GL_CULL_FACE);
     glDisable(GL_DEPTH_TEST);
-    glEnable(GL_SCISSOR_TEST);
+    //glEnable(GL_SCISSOR_TEST);
 #ifdef GL_POLYGON_MODE
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 #endif
@@ -462,17 +404,15 @@ bool Gui::SetupRenderState(OpenGL* openGL, ImDrawData* drawData, int fbWidth, in
         { 0.0f,         0.0f,        -1.0f,   0.0f },
         { (R+L)/(L-R),  (T+B)/(B-T),  0.0f,   1.0f },
     };
-    openGL->BuildOrthographicMatrix(L, R, T, B);
+
+    detail::GuiShader->SetShader(openGL);
 
     GLuint shaderHandle = detail::GuiShader->GetShaderHandle();
-    openGL->glUseProgram(shaderHandle);
-
     GLint location = openGL->glGetUniformLocation(shaderHandle, "Texture");
     openGL->glUniform1i(location, 0);
 
     location = openGL->glGetUniformLocation(shaderHandle, "ProjMtx");
     openGL->glUniformMatrix4fv(location, 1, GL_FALSE, &orthoProj[0][0]);
-
 #ifdef GL_SAMPLER_BINDING
     openGL->glBindSampler(0, 0); // We use combined texture/sampler state. Applications using GL 3.3 may set that otherwise.
 #endif
@@ -508,14 +448,16 @@ void Gui::NewFrame(HWND hWnd)
 
     // setup display size (every frame to accommodate for window resizing)
     RECT rect;
-    if (!GetWindowRect(hWnd, &rect))
+    if (!GetClientRect(hWnd, &rect))
     {
-        MessageBox(hWnd, L"Failed to get window rect, huh?", L"Error", MB_OK);
+        MessageBox(hWnd, L"Failed to get client rect, huh?", L"Error", MB_OK);
+
         rect.top = 0;
-        rect.bottom = 480;
+        rect.bottom = 1280;
         rect.left = 0;
-        rect.right = 640;
+        rect.right = 720;
     }
+
     int width = (rect.right - rect.left);
     int height = (rect.bottom - rect.top);
     

@@ -77,7 +77,7 @@ bool Graphics::Initialize(OpenGL* openGL, HWND hWnd)
 		return false;
 	}
 
-	if (!_model->Initialize(_openGL, "models/cube.txt", "textures/stone.tga", 0, true))
+	if (!_model->Initialize(_openGL, "models/cube.txt", "textures/stone.tga", 1, true))
 	{
 		MessageBox(hWnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
@@ -184,7 +184,7 @@ bool Graphics::RunFrame(HWND hWnd)
 
 bool Graphics::Render(HWND hWnd, float rotation)
 {
-	_openGL->BeginScene(0.5f, 0.5f, 0.5f, 1.0f);
+	_openGL->BeginScene(0.45f, 0.55f, 0.60f, 1.00f);
 
 	// setup the camera matrix
 	_camera->Render();
@@ -218,7 +218,7 @@ bool Graphics::Render(HWND hWnd, float rotation)
 	Shader* shader = _lightShader;
 	
 	shader->SetShader(_openGL);
-	shader->SetShaderParameters(_openGL, worldMatrix, viewMatrix, projectionMatrix, 0, lightDirection, diffuseLightColor, ambientLight);
+	shader->SetShaderParameters(_openGL, worldMatrix, viewMatrix, projectionMatrix, 1, lightDirection, diffuseLightColor, ambientLight);
 
 	_model->Render(_openGL);
 
