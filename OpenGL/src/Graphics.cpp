@@ -61,7 +61,7 @@ Graphics::~Graphics()
 {
 }
 
-bool Graphics::Initialize(OpenGL* openGL, HWND hWnd)
+bool Graphics::Initialize(OpenGL* openGL, HWND hWnd, Input* input)
 {
 	_openGL = openGL;
 
@@ -118,7 +118,7 @@ bool Graphics::Initialize(OpenGL* openGL, HWND hWnd)
 		return false;
 	}
 	
-	if (!_gui->Initialize(_openGL, hWnd))
+	if (!_gui->Initialize(_openGL, hWnd, input))
 	{
 		MessageBox(hWnd, L"Could not initliaze the Gui.", L"Error", MB_OK);
 		return false;

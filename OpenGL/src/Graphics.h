@@ -21,7 +21,7 @@ public:
 	Graphics(const Graphics& other);
 	virtual ~Graphics();
 
-	bool Initialize(OpenGL* openGL, HWND hwnd);
+	bool Initialize(OpenGL* openGL, HWND hwnd, Input* input);
 	void Shutdown();
 	bool RunFrame(HWND hWnd, Input* input);
 

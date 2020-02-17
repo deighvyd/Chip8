@@ -10,7 +10,10 @@
 //#include <gl\glxext.h>
 #include <gl\wglext.h>
 
+#include <assert.h>
+
 #include <math.h>
 #include <string.h>
 
 #include <fstream>
+#include <functional>

@@ -12,7 +12,7 @@ public:
 	Gui(const Gui& other);
 	virtual ~Gui();
 
-	bool Initialize(OpenGL* openGL, HWND hWnd);
+	bool Initialize(OpenGL* openGL, HWND hWnd, Input* input);
 	void Shutdown(OpenGL* openGL);
 	void Render(OpenGL* openGL, HWND hWnd, Input* input);
 

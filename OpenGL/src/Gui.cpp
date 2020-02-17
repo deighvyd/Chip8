@@ -106,7 +106,7 @@ Gui::~Gui()
 {
 }
 
-bool Gui::Initialize(OpenGL* openGL, HWND hWnd)
+bool Gui::Initialize(OpenGL* openGL, HWND hWnd, Input* input)
 {
     if (detail::GuiShader == nullptr && (detail::GuiShader = new detail::ImGuiShader()) == nullptr)
     {
@@ -132,75 +132,32 @@ bool Gui::Initialize(OpenGL* openGL, HWND hWnd)
     // setup back-end capabilities flags
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;         // We can honor GetMouseCursor() values (optional)
     io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;          // We can honor io.WantSetMousePos requests (optional, rarely used)
-    io.BackendPlatformName = "imgui_impl_glfw";
+    io.BackendPlatformName = "imgui_impl_win32";
+    io.ImeWindowHandle = hWnd;
 
     // Keyboard mapping. ImGui will use those indices to peek into the io.KeysDown[] array.
-    /*io.KeyMap[ImGuiKey_Tab] = GLFW_KEY_TAB;
-    io.KeyMap[ImGuiKey_LeftArrow] = GLFW_KEY_LEFT;
-    io.KeyMap[ImGuiKey_RightArrow] = GLFW_KEY_RIGHT;
-    io.KeyMap[ImGuiKey_UpArrow] = GLFW_KEY_UP;
-    io.KeyMap[ImGuiKey_DownArrow] = GLFW_KEY_DOWN;
-    io.KeyMap[ImGuiKey_PageUp] = GLFW_KEY_PAGE_UP;
-    io.KeyMap[ImGuiKey_PageDown] = GLFW_KEY_PAGE_DOWN;
-    io.KeyMap[ImGuiKey_Home] = GLFW_KEY_HOME;
-    io.KeyMap[ImGuiKey_End] = GLFW_KEY_END;
-    io.KeyMap[ImGuiKey_Insert] = GLFW_KEY_INSERT;
-    io.KeyMap[ImGuiKey_Delete] = GLFW_KEY_DELETE;
-    io.KeyMap[ImGuiKey_Backspace] = GLFW_KEY_BACKSPACE;
-    io.KeyMap[ImGuiKey_Space] = GLFW_KEY_SPACE;
-    io.KeyMap[ImGuiKey_Enter] = GLFW_KEY_ENTER;
-    io.KeyMap[ImGuiKey_Escape] = GLFW_KEY_ESCAPE;
-    io.KeyMap[ImGuiKey_KeyPadEnter] = GLFW_KEY_KP_ENTER;
-    io.KeyMap[ImGuiKey_A] = GLFW_KEY_A;
-    io.KeyMap[ImGuiKey_C] = GLFW_KEY_C;
-    io.KeyMap[ImGuiKey_V] = GLFW_KEY_V;
-    io.KeyMap[ImGuiKey_X] = GLFW_KEY_X;
-    io.KeyMap[ImGuiKey_Y] = GLFW_KEY_Y;
-    io.KeyMap[ImGuiKey_Z] = GLFW_KEY_Z;*/
-
-    /*io.SetClipboardTextFn = ImGui_ImplGlfw_SetClipboardText;
-    io.GetClipboardTextFn = ImGui_ImplGlfw_GetClipboardText;
-    io.ClipboardUserData = g_Window;*/
-#if defined(_WIN32)
-    io.ImeWindowHandle = hWnd;
-#endif
-
-    // Create mouse cursors
-    // (By design, on X11 cursors are user configurable and some cursors may be missing. When a cursor doesn't exist,
-    // GLFW will emit an error which will often be printed by the app, so we temporarily disable error reporting.
-    // Missing cursors will return NULL and our _UpdateMouseCursor() function will use the Arrow cursor instead.)
-//    GLFWerrorfun prev_error_callback = glfwSetErrorCallback(NULL);
-//    g_MouseCursors[ImGuiMouseCursor_Arrow] = glfwCreateStandardCursor(GLFW_ARROW_CURSOR);
-//    g_MouseCursors[ImGuiMouseCursor_TextInput] = glfwCreateStandardCursor(GLFW_IBEAM_CURSOR);
-//    g_MouseCursors[ImGuiMouseCursor_ResizeNS] = glfwCreateStandardCursor(GLFW_VRESIZE_CURSOR);
-//    g_MouseCursors[ImGuiMouseCursor_ResizeEW] = glfwCreateStandardCursor(GLFW_HRESIZE_CURSOR);
-//    g_MouseCursors[ImGuiMouseCursor_Hand] = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
-//#if GLFW_HAS_NEW_CURSORS
-//    g_MouseCursors[ImGuiMouseCursor_ResizeAll] = glfwCreateStandardCursor(GLFW_RESIZE_ALL_CURSOR);
-//    g_MouseCursors[ImGuiMouseCursor_ResizeNESW] = glfwCreateStandardCursor(GLFW_RESIZE_NESW_CURSOR);
-//    g_MouseCursors[ImGuiMouseCursor_ResizeNWSE] = glfwCreateStandardCursor(GLFW_RESIZE_NWSE_CURSOR);
-//    g_MouseCursors[ImGuiMouseCursor_NotAllowed] = glfwCreateStandardCursor(GLFW_NOT_ALLOWED_CURSOR);
-//#else
-//    g_MouseCursors[ImGuiMouseCursor_ResizeAll] = glfwCreateStandardCursor(GLFW_ARROW_CURSOR);
-//    g_MouseCursors[ImGuiMouseCursor_ResizeNESW] = glfwCreateStandardCursor(GLFW_ARROW_CURSOR);
-//    g_MouseCursors[ImGuiMouseCursor_ResizeNWSE] = glfwCreateStandardCursor(GLFW_ARROW_CURSOR);
-//    g_MouseCursors[ImGuiMouseCursor_NotAllowed] = glfwCreateStandardCursor(GLFW_ARROW_CURSOR);
-//#endif
-//    glfwSetErrorCallback(prev_error_callback);
-
-    // Chain GLFW callbacks: our callbacks will call the user's previously installed callbacks, if any.
-    //g_PrevUserCallbackMousebutton = NULL;
-    //g_PrevUserCallbackScroll = NULL;
-    //g_PrevUserCallbackKey = NULL;
-    //g_PrevUserCallbackChar = NULL;
-    //if (install_callbacks)
-    //{
-    //    g_InstalledCallbacks = true;
-    //    g_PrevUserCallbackMousebutton = glfwSetMouseButtonCallback(window, ImGui_ImplGlfw_MouseButtonCallback);
-    //    g_PrevUserCallbackScroll = glfwSetScrollCallback(window, ImGui_ImplGlfw_ScrollCallback);
-    //    g_PrevUserCallbackKey = glfwSetKeyCallback(window, ImGui_ImplGlfw_KeyCallback);
-    //    g_PrevUserCallbackChar = glfwSetCharCallback(window, ImGui_ImplGlfw_CharCallback);
-    //}
+    io.KeyMap[ImGuiKey_Tab] = VK_TAB;
+    io.KeyMap[ImGuiKey_LeftArrow] = VK_LEFT;
+    io.KeyMap[ImGuiKey_RightArrow] = VK_RIGHT;
+    io.KeyMap[ImGuiKey_UpArrow] = VK_UP;
+    io.KeyMap[ImGuiKey_DownArrow] = VK_DOWN;
+    io.KeyMap[ImGuiKey_PageUp] = VK_PRIOR;
+    io.KeyMap[ImGuiKey_PageDown] = VK_NEXT;
+    io.KeyMap[ImGuiKey_Home] = VK_HOME;
+    io.KeyMap[ImGuiKey_End] = VK_END;
+    io.KeyMap[ImGuiKey_Insert] = VK_INSERT;
+    io.KeyMap[ImGuiKey_Delete] = VK_DELETE;
+    io.KeyMap[ImGuiKey_Backspace] = VK_BACK;
+    io.KeyMap[ImGuiKey_Space] = VK_SPACE;
+    io.KeyMap[ImGuiKey_Enter] = VK_RETURN;
+    io.KeyMap[ImGuiKey_Escape] = VK_ESCAPE;
+    io.KeyMap[ImGuiKey_KeyPadEnter] = VK_RETURN;
+    io.KeyMap[ImGuiKey_A] = 'A';
+    io.KeyMap[ImGuiKey_C] = 'C';
+    io.KeyMap[ImGuiKey_V] = 'V';
+    io.KeyMap[ImGuiKey_X] = 'X';
+    io.KeyMap[ImGuiKey_Y] = 'Y';
+    io.KeyMap[ImGuiKey_Z] = 'Z';
 
     //io.Fonts->AddFontDefault();
     //io.Fonts->AddFontFromFileTTF("fonts/roboto-medium.ttf", 16.0f);
@@ -213,16 +170,14 @@ bool Gui::Initialize(OpenGL* openGL, HWND hWnd)
     openGL->glGenBuffers(1, &detail::VboHandle);
     openGL->glGenBuffers(1, &detail::ElementsHandle);
 
+    input->SetCharacterHandler(
+        [](unsigned int c)
+        {
+            ImGui::GetIO().AddInputCharacter(c);                    
+        });
+
     BuildFonts();
 
-    // Restore modified GL state
-//    glBindTexture(GL_TEXTURE_2D, last_texture);
-//    glBindBuffer(GL_ARRAY_BUFFER, last_array_buffer);
-//#ifndef IMGUI_IMPL_OPENGL_ES2
-//    glBindVertexArray(last_vertex_array);
-//#endif
-
-    //g_ClientApi = client_api;
     return true;
 }
 
@@ -495,6 +450,17 @@ void Gui::NewFrame(HWND hWnd, Input *input)
         io.MousePos = ImVec2(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
         //logging::Info("MousePos %d, %d", mousePos.x, mousePos.y);
     }
+
+    // update the keyboard
+    for (unsigned int i = 0 ; i < Input::NumKeys ; ++i)
+    {
+        io.KeysDown[i] = input->IsKeyDown(i);
+    }
+
+    io.KeyCtrl = (GetKeyState(VK_CONTROL) & 0x8000) != 0;
+    io.KeyShift = (GetKeyState(VK_SHIFT) & 0x8000) != 0;
+    io.KeyAlt = (GetKeyState(VK_MENU) & 0x8000) != 0;
+    io.KeySuper = false;
 
     ImGui::NewFrame();
 }

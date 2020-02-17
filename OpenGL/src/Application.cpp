@@ -65,7 +65,7 @@ bool Application::Initialize()
 		return false;
 	}
 
-	if (!_graphics->Initialize(_openGL, _hWnd))
+	if (!_graphics->Initialize(_openGL, _hWnd, _input))
 	{
 		MessageBox(_hWnd, L"Could not initialize graphics", L"Error", MB_OK);
 		return false;
@@ -179,15 +179,23 @@ LRESULT CALLBACK Application::MessageHandler(HWND hWnd, UINT uMsg, WPARAM wParam
 		}
 
 		case WM_KEYDOWN:
+		case WM_SYSKEYDOWN:
 		{
 			_input->KeyDown((unsigned int)wParam);
 			return 0;
 		}
 
 		case WM_KEYUP:
+		case WM_SYSKEYUP:
 		{
 			_input->KeyUp((unsigned int)wParam);
 			return 0;
+		}
+
+		case WM_CHAR:
+		{
+			_input->OnCharacterPressed((unsigned int)wParam);
+			break;
 		}
 
 		case WM_LBUTTONUP:

@@ -1,8 +1,10 @@
 #include "pch.h"
 
 #include "Input.h"
+#include "Log.h"
 
 Input::Input()
+	: _charHandler(nullptr)
 {
 }
 
@@ -24,18 +26,38 @@ void Input::Initialize()
 
 void Input::KeyDown(unsigned int key)
 {
-	_keys[key] = true;
+	if (key < NumKeys)
+	{
+		_keys[key] = true;
+		//logging::Info("Key %d down", key);
+	}
 }
 
 void Input::KeyUp(unsigned int key)
 {
-	_keys[key] = false;
-	return;
+	if (key < NumKeys)
+	{
+		_keys[key] = false;
+		//logging::Info("Key %d up", key);
+	}
 }
 
 bool Input::IsKeyDown(unsigned int key)
 {
-	return _keys[key];
+	if (key < NumKeys)
+	{
+		return _keys[key];
+	}
+
+	return false;
+}
+
+void Input::OnCharacterPressed(unsigned int c)
+{
+	if (_charHandler != nullptr)
+	{
+		_charHandler(c);
+	}
 }
 
 bool Input::IsButtonPressed(unsigned int button) const
