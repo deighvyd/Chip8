@@ -2,15 +2,19 @@
 
 #include "Application.h"
 
-#include "OpenGL.h"
-#include "Input.h"
 #include "Graphics.h"
+#include "Input.h"
+#include "Log.h"
+#include "OpenGL.h"
+
+Application* Application::_Instance = nullptr;
 
 Application::Application()
+	: _hasFocus(false)
+	, _openGL(nullptr)
+	, _input( nullptr)
+	, _graphics(nullptr)
 {
-	_openGL = nullptr;
-	_input = nullptr;
-	_graphics = nullptr;
 }
 
 Application::Application(const Application& other)
@@ -19,6 +23,16 @@ Application::Application(const Application& other)
 
 Application::~Application()
 {
+}
+
+Application& Application::GetInstance()
+{
+	if (_Instance == nullptr)
+	{
+		_Instance = new Application();
+	}
+
+	return *_Instance;
 }
 
 bool Application::Initialize()
@@ -137,7 +151,7 @@ bool Application::RunFrame()
 		return false;
 	}
 
-	bool result = _graphics->RunFrame(_hWnd);
+	bool result = _graphics->RunFrame(_hWnd, _input);
 	if (!result)
 	{
 		return false;
@@ -146,20 +160,78 @@ bool Application::RunFrame()
 	return true;
 }
 
-LRESULT CALLBACK Application::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
+LRESULT CALLBACK Application::MessageHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch(umsg)
+	switch(uMsg)
 	{
+		case WM_SETFOCUS:
+		{
+			_hasFocus = true;
+			//logging::Info("Gained focus");
+			break;
+		}
+  
+		case WM_KILLFOCUS:
+		{
+			_hasFocus = false;
+			//logging::Info("Lost focus");
+			break;
+		}
+
 		case WM_KEYDOWN:
 		{
-			_input->KeyDown((unsigned int)wparam);
+			_input->KeyDown((unsigned int)wParam);
 			return 0;
 		}
 
 		case WM_KEYUP:
 		{
-			_input->KeyUp((unsigned int)wparam);
+			_input->KeyUp((unsigned int)wParam);
 			return 0;
+		}
+
+		case WM_LBUTTONUP:
+		{
+			_input->OnMouseUp(0);
+			break;
+		}
+
+		case WM_LBUTTONDOWN:
+		{
+			_input->OnMouseDown(0);
+			break;
+		}
+			
+		case WM_MBUTTONUP:
+		{
+			_input->OnMouseUp(1);
+			break;
+		}
+
+		case WM_MBUTTONDOWN:
+		{
+			_input->OnMouseDown(1);
+			break;
+		}
+
+		case WM_RBUTTONUP:
+		{
+			_input->OnMouseUp(2);
+			break;
+		}
+
+		case WM_RBUTTONDOWN:
+		{
+			_input->OnMouseDown(2);
+			break;
+		}
+
+		case WM_MOUSEMOVE:
+		{
+			int xPos = GET_X_LPARAM(lParam); 
+			int yPos = GET_Y_LPARAM(lParam);
+			_input->OnMouseMove(xPos, yPos);
+			break;
 		}
 
 		default:
@@ -168,12 +240,11 @@ LRESULT CALLBACK Application::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 		}
 	}
 
-	return DefWindowProc(hwnd, umsg, wparam, lparam);
+	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
 bool Application::InitializeWindows(OpenGL* openGL, int& screenWidth, int& screenHeight)
 {
-	ApplicationHandle = this;
 	_hInstance = GetModuleHandle(nullptr);
 	_name = L"OpenGL";
 
@@ -287,8 +358,6 @@ void Application::ShutdownWindows()
 	UnregisterClass(_name, _hInstance);
 	_hInstance = nullptr;
 
-	ApplicationHandle = nullptr;
-
 	return;
 }
 
@@ -308,5 +377,5 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 		}
 	}
 
-	return ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
+	return Application::GetInstance().MessageHandler(hwnd, umessage, wparam, lparam);
 }

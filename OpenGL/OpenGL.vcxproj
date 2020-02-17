@@ -43,6 +43,7 @@
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\LightShader.cpp" />
+    <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Model.cpp" />
     <ClCompile Include="src\OpenGL.cpp" />
@@ -69,6 +70,7 @@
     <ClInclude Include="src\Input.h" />
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\LightShader.h" />
+    <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\Model.h" />
     <ClInclude Include="src\OpenGL.h" />
     <ClInclude Include="src\pch.h" />

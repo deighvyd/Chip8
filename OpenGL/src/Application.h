@@ -9,13 +9,16 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 class Application
 {
 public:
-	Application();
-	Application(const Application& other);
+	static Application& GetInstance();
+
+public:
 	virtual ~Application();
 
 	bool Initialize();
 	void Shutdown();
 	void Run();
+
+	bool HasFocus() const { return _hasFocus; }
 
 	LRESULT CALLBACK MessageHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -25,16 +28,22 @@ private:
 	void ShutdownWindows();
 
 private:
+	Application();
+	Application(const Application& other);
+
+private:
+	static Application* _Instance;
+
+private:
 	LPCWSTR _name;
 	HINSTANCE _hInstance;
 	HWND _hWnd;
+
+	bool _hasFocus;
 
 	OpenGL* _openGL;
 	Input* _input;
 	Graphics* _graphics;
 
 };
-
-// TODO - Singleton?????
-static Application* ApplicationHandle = nullptr;
 

@@ -75,6 +75,9 @@
     <ClCompile Include="src\Gui.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Log.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Graphics.h">
@@ -135,6 +138,9 @@
       <Filter>src\imgui</Filter>
     </ClInclude>
     <ClInclude Include="src\Gui.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Log.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

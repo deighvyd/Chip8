@@ -4,20 +4,15 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
 {
-	Application* application = new Application();
-	if (application == nullptr)
+	Application& application = Application::GetInstance();
+	if (application.Initialize())
 	{
-		return 1;
-	}
-	
-	if (application->Initialize())
-	{
-		application->Run();
+		application.Run();
 	}
 
-	application->Shutdown();
-	delete application;
-	application = nullptr;
+	application.Shutdown();
+	
+	// TODO - destroy the singleton
 
 	return 0;
 }

@@ -4,6 +4,9 @@
 
 #include "imgui/imgui.h"
 
+#include "Application.h"
+#include "Input.h"
+#include "Log.h"
 #include "OpenGL.h"
 #include "Shader.h"
 
@@ -233,9 +236,9 @@ void Gui::Shutdown(OpenGL* openGL)
     }
 }
 
-void Gui::Render(OpenGL* openGL, HWND hWnd)
+void Gui::Render(OpenGL* openGL, HWND hWnd, Input* input)
 {
-    NewFrame(hWnd);
+    NewFrame(hWnd, input);
 
     // some demo code
     if (detail::ShowDemoWindow)
@@ -441,7 +444,7 @@ bool Gui::SetupRenderState(OpenGL* openGL, ImDrawData* drawData, int fbWidth, in
     return true;
 }
 
-void Gui::NewFrame(HWND hWnd)
+void Gui::NewFrame(HWND hWnd, Input *input)
 {
     ImGuiIO& io = ImGui::GetIO();
     assert(io.Fonts->IsBuilt() && "Font atlas not built! It is generally built by the renderer back-end. Missing call to renderer _NewFrame() function? e.g. ImGui_ImplOpenGL3_NewFrame().");
@@ -477,11 +480,21 @@ void Gui::NewFrame(HWND hWnd)
     io.DeltaTime = g_Time > 0.0 ? (float)(current_time - g_Time) : (float)(1.0f/60.0f);
     g_Time = current_time;*/
 
-    //ImGui_ImplGlfw_UpdateMousePosAndButtons();
-    //ImGui_ImplGlfw_UpdateMouseCursor();
+    // update the mouse buttons
+    for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++)
+    {
+        // If a mouse press event came, always pass it as "mouse held this frame", so we don't miss click-release events that are shorter than 1 frame.
+        io.MouseDown[i] = input->IsButtonPressed(i);
+    }
 
-    // Update game controllers (if enabled and available)
-    //ImGui_ImplGlfw_UpdateGamepads();
+    // update the mouse position
+    io.MousePos = ImVec2(-FLT_MAX, -FLT_MAX);
+    if (Application::GetInstance().HasFocus())
+    {
+        const Input::MousePos mousePos = input->GetMousePosition();    
+        io.MousePos = ImVec2(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+        //logging::Info("MousePos %d, %d", mousePos.x, mousePos.y);
+    }
 
     ImGui::NewFrame();
 }

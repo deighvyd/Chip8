@@ -163,7 +163,7 @@ void Graphics::Shutdown()
 	return;
 }
 
-bool Graphics::RunFrame(HWND hWnd)
+bool Graphics::RunFrame(HWND hWnd, Input* input)
 {
 	static float rotation = 0.0f;
 	
@@ -174,7 +174,7 @@ bool Graphics::RunFrame(HWND hWnd)
 		rotation -= 360.0f;
 	}
 
-	if (!Render(hWnd, rotation))
+	if (!Render(hWnd, input, rotation))
 	{
 		return false;
 	}
@@ -182,7 +182,7 @@ bool Graphics::RunFrame(HWND hWnd)
 	return true;
 }
 
-bool Graphics::Render(HWND hWnd, float rotation)
+bool Graphics::Render(HWND hWnd, Input* input, float rotation)
 {
 	_openGL->BeginScene(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -222,7 +222,7 @@ bool Graphics::Render(HWND hWnd, float rotation)
 
 	_model->Render(_openGL);
 
-	_gui->Render(_openGL, hWnd);
+	_gui->Render(_openGL, hWnd, input);
 
 	_openGL->EndScene();
 

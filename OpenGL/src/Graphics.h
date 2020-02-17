@@ -2,6 +2,7 @@
 
 class Camera;
 class Gui;
+class Input;
 class Light;
 class Model;
 class OpenGL;
@@ -22,10 +23,10 @@ public:
 
 	bool Initialize(OpenGL* openGL, HWND hwnd);
 	void Shutdown();
-	bool RunFrame(HWND hWnd);
+	bool RunFrame(HWND hWnd, Input* input);
 
 private:
-	bool Render(HWND hWnd, float rotation);
+	bool Render(HWND hWnd, Input* input, float rotation);
 
 private:
 	OpenGL* _openGL;
