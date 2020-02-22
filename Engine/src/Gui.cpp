@@ -444,7 +444,7 @@ void Gui::NewFrame(HWND hWnd, Input *input)
 
     // update the mouse position
     io.MousePos = ImVec2(-FLT_MAX, -FLT_MAX);
-    if (Application::GetInstance().HasFocus())
+    if (Application::Instance()->HasFocus())
     {
         const Input::MousePos mousePos = input->GetMousePosition();    
         io.MousePos = ImVec2(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));

@@ -4,40 +4,43 @@ class OpenGL;
 class Input;
 class Graphics;
 
-static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
 class Application
 {
 public:
-	static Application& GetInstance();
+	static Application* Instance();
 
 public:
-	virtual ~Application();
-
-	bool Initialize();
+	bool Initialize(LPCWSTR name);
 	void Shutdown();
 	void Run();
 
 	bool HasFocus() const { return _hasFocus; }
 
+	virtual void OnUpdate() = 0;
+	virtual void OnDraw() = 0;
+
 	LRESULT CALLBACK MessageHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+protected:
+	virtual bool RunFrame();
+
 private:
-	bool RunFrame();
 	bool InitializeWindows(OpenGL* openGL, int& screenWidth, int& screenHeight);
 	void ShutdownWindows();
 
-private:
-	Application();
-	Application(const Application& other);
-
-private:
-	static Application* _Instance;
+protected:
+	Application(int width, int height);
+	Application(Application const&) = delete;
+    Application& operator=(Application const&) = delete;
+	virtual ~Application();
 
 private:
 	LPCWSTR _name;
 	HINSTANCE _hInstance;
 	HWND _hWnd;
+
+	int _width;
+	int _height;
 
 	bool _hasFocus;
 

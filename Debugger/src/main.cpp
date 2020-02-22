@@ -1,18 +1,17 @@
 #include "pch.h"
 
-#include "Application.h"
+#include "Debugger.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
 {
-	Application& application = Application::GetInstance();
-	if (application.Initialize())
+	Debugger* debugger = new Debugger();
+	if (debugger->Initialize(L"Chip8 Editor"))
 	{
-		application.Run();
+		debugger->Run();
 	}
 
-	application.Shutdown();
-	
-	// TODO - destroy the singleton
+	debugger->Shutdown();
+	delete debugger;
 
 	return 0;
 }

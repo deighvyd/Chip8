@@ -7,38 +7,57 @@
 #include "Log.h"
 #include "OpenGL.h"
 
-Application* Application::_Instance = nullptr;
+namespace detail
+{
+	static Application* Instance = nullptr;
 
-Application::Application()
-	: _hasFocus(false)
+	LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
+	{
+		switch(umessage)
+		{
+			case WM_CLOSE:
+			{
+				PostQuitMessage(0);		
+				return 0;
+			}
+
+			default:
+			{
+				break;
+			}
+		}
+
+		return Application::Instance()->MessageHandler(hwnd, umessage, wparam, lparam);
+	}
+}
+
+Application* Application::Instance()
+{
+	return detail::Instance;
+}
+
+Application::Application(int width, int height)
+	: _width(width)
+	, _height(height)
+	, _hasFocus(false)
 	, _openGL(nullptr)
 	, _input( nullptr)
 	, _graphics(nullptr)
 {
-}
-
-Application::Application(const Application& other)
-{
+	assert(detail::Instance == nullptr);
+	detail::Instance = this;
 }
 
 Application::~Application()
 {
+	detail::Instance = nullptr;
 }
 
-Application& Application::GetInstance()
+bool Application::Initialize(LPCWSTR name)
 {
-	if (_Instance == nullptr)
-	{
-		_Instance = new Application();
-	}
-
-	return *_Instance;
-}
-
-bool Application::Initialize()
-{
-	int screenWidth = 0;
-	int screenHeight = 0;
+	_name = name;
+	int screenWidth = _width;
+	int screenHeight = _height;
 
 	_openGL = new OpenGL();
 	if (_openGL == nullptr)
@@ -259,7 +278,7 @@ bool Application::InitializeWindows(OpenGL* openGL, int& screenWidth, int& scree
 	// setup the windows class with default settings.
 	WNDCLASSEX wc;
 	wc.style         = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	wc.lpfnWndProc   = WndProc;
+	wc.lpfnWndProc   = detail::WndProc;
 	wc.cbClsExtra    = 0;
 	wc.cbWndExtra    = 0;
 	wc.hInstance     = _hInstance;
@@ -312,8 +331,8 @@ bool Application::InitializeWindows(OpenGL* openGL, int& screenWidth, int& scree
 	}
 	else
 	{
-		screenWidth  = 1280;
-		screenHeight = 720;
+		screenWidth  = _width;
+		screenHeight = _height;
 		posX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth)  / 2;
 		posY = (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
 	}
@@ -369,21 +388,3 @@ void Application::ShutdownWindows()
 	return;
 }
 
-LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
-{
-	switch(umessage)
-	{
-		case WM_CLOSE:
-		{
-			PostQuitMessage(0);		
-			return 0;
-		}
-
-		default:
-		{
-			break;
-		}
-	}
-
-	return Application::GetInstance().MessageHandler(hwnd, umessage, wparam, lparam);
-}
