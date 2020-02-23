@@ -54,6 +54,33 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "models", "models", "{005867
 		assets\models\cube.txt = assets\models\cube.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "programs", "programs", "{FE90D549-3E91-4527-9D9E-71E0CA1EC0A2}"
+	ProjectSection(SolutionItems) = preProject
+		assets\programs\15PUZZLE = assets\programs\15PUZZLE
+		assets\programs\BLINKY = assets\programs\BLINKY
+		assets\programs\BLITZ = assets\programs\BLITZ
+		assets\programs\BRIX = assets\programs\BRIX
+		assets\programs\CONNECT4 = assets\programs\CONNECT4
+		assets\programs\GUESS = assets\programs\GUESS
+		assets\programs\HIDDEN = assets\programs\HIDDEN
+		assets\programs\INVADERS = assets\programs\INVADERS
+		assets\programs\KALEID = assets\programs\KALEID
+		assets\programs\MAZE = assets\programs\MAZE
+		assets\programs\MERLIN = assets\programs\MERLIN
+		assets\programs\MISSILE = assets\programs\MISSILE
+		assets\programs\PONG = assets\programs\PONG
+		assets\programs\PONG2 = assets\programs\PONG2
+		assets\programs\PUZZLE = assets\programs\PUZZLE
+		assets\programs\SYZYGY = assets\programs\SYZYGY
+		assets\programs\TANK = assets\programs\TANK
+		assets\programs\TETRIS = assets\programs\TETRIS
+		assets\programs\TICTAC = assets\programs\TICTAC
+		assets\programs\UFO = assets\programs\UFO
+		assets\programs\VBRIX = assets\programs\VBRIX
+		assets\programs\VERS = assets\programs\VERS
+		assets\programs\WIPEOFF = assets\programs\WIPEOFF
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -103,6 +130,7 @@ Global
 		{1F9D9047-8B58-49F9-A196-86749200FE57} = {45CC3B14-E0CF-4BC1-967B-D1AEC9D334C1}
 		{A6744F2A-E186-4400-B332-F0D24E657866} = {45CC3B14-E0CF-4BC1-967B-D1AEC9D334C1}
 		{00586746-6CAF-47D9-B98E-F4D3016196CB} = {45CC3B14-E0CF-4BC1-967B-D1AEC9D334C1}
+		{FE90D549-3E91-4527-9D9E-71E0CA1EC0A2} = {45CC3B14-E0CF-4BC1-967B-D1AEC9D334C1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8CFD06F0-8F06-4DAC-8F18-8B4AD7EB1311}
