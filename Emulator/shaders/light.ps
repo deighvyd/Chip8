@@ -1,0 +1,43 @@
+#version 400
+
+in vec2 texCoord;
+in vec3 normal;
+
+out vec4 outputColour;
+
+uniform sampler2D shaderTexture;
+uniform vec3 lightDirection;
+uniform vec4 diffuseLightColour;
+uniform vec4 ambientLight;
+
+void main(void)
+{
+	vec4 textureColour;
+	vec4 colour;
+	vec3 lightDir;
+	float lightIntensity;
+
+	// sample the pixel colour from the texture using the sampler at this texture coordinate location
+	textureColour = texture(shaderTexture, texCoord);
+
+	// set the default output colour to the ambient light value for all pixels.
+	colour = ambientLight;
+
+	// invert the light direction for calculations
+	lightDir = -lightDirection;
+
+	// calculate the amount of light on this pixel
+	lightIntensity = clamp(dot(normal, lightDir), 0.0f, 1.0f);
+
+	if (lightIntensity > 0.0f)
+	{
+		// determine the final diffuse colour based on the diffuse colour and the amount of light intensity
+		colour += (diffuseLightColour * lightIntensity);
+	}
+
+	// clamp the final light colour
+	colour = clamp(colour, 0.0f, 1.0f);
+
+	// multiply the texture pixel and the final diffuse colour to get the final pixel colour result.
+	outputColour = colour * textureColour;
+}

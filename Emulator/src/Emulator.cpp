@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "Designer.h"
+#include "Emulator.h"
 
 Emulator::Emulator()
 	: Application(1280, 720)

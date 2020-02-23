@@ -340,3 +340,5 @@ ASALocalRun/
 healthchecksdb
 /OpenGL/imgui.ini
 /Editor/shader-error.txt
+/Emulator/shader-error.txt
+/Emulator/imgui.ini

@@ -273,7 +273,6 @@ LRESULT CALLBACK Application::MessageHandler(HWND hWnd, UINT uMsg, WPARAM wParam
 bool Application::InitializeWindows(OpenGL* openGL, int& screenWidth, int& screenHeight)
 {
 	_hInstance = GetModuleHandle(nullptr);
-	_name = L"OpenGL";
 
 	// setup the windows class with default settings.
 	WNDCLASSEX wc;
