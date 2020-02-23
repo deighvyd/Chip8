@@ -11,6 +11,12 @@ Chip8::Chip8()
 	Initialize();
 }
 
+Chip8::Chip8(const char* filename)
+{
+	Initialize();
+	LoadProgram(filename);
+}
+
 void Chip8::Initialize()
 {
 	memset(_memory, 0, TotalMemoryBytes);
@@ -34,25 +40,48 @@ void Chip8::Initialize()
 	memcpy(_memory, Font, NumFontChars);
 }
 
-void Chip8::Load(const char* filename) 
+bool Chip8::LoadProgram(const char* filename) 
 {
+	size_t size = ReadProgram(filename, &(_memory[ProgramStart]), TotalMemoryBytes - ProgramStart);
+	if (size == 0)
+	{
+		Info("Error: could not load program %s\n", filename);
+		return false;
+	}
+	
+	return true;
+}
+
+size_t Chip8::ReadProgram(const char* filename, unsigned char* buffer, size_t bufferSize)
+{
+	assert(filename != nullptr);
+	assert(buffer != nullptr);
+	
 	FILE* file = nullptr;
 	if (fopen_s(&file, filename, "rb") != 0)
 	{
-		printf("Could not open file %s\n", filename);
-		return;
+		Info("Error: Could not open file %s\n", filename);
+		return 0;
 	}
 	
-	// TODO - read in one go
-	unsigned int size = fread(&(_memory[ProgramStart]), 1, TotalMemoryBytes - ProgramStart, file);
-	if (size == 0)
+	size_t read = fread(buffer, 1, bufferSize, file);
+	if (!feof(file))
+	{
+		Info("Error: could not read the whole program into buffer of size %zu\n", bufferSize);
+		return 0;
+	}
+
+	if (read == 0)
 	{
 		Info("Error: unable to read program %s\n", filename); 
+		return 0;
 	}
 	else
 	{
-		Info("Read program %s (%u)", filename, size);
+		Info("Read program %s (%zu)", filename, read);
 	}
+
+	return read;
 }
 
 void Chip8::EmulateCycle()

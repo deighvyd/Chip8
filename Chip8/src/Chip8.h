@@ -5,17 +5,8 @@
 class Chip8
 {
 public:
-	
-
-public:
-	Chip8();
-
-	void Initialize();
-	void Load(const char* filename);
-	void EmulateCycle();
-
-public:
 	// specifications
+	// TODO - move this its own header files?
 
 	static constexpr int TotalMemoryBytes = 0x1000;
 	static constexpr int NumRegisers = 16;
@@ -55,6 +46,20 @@ public:
 		0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
 		0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 	};
+
+public:
+	Chip8();
+	Chip8(const char* filename);
+
+	void Initialize();
+	bool LoadProgram(const char* filename);
+	void EmulateCycle();
+
+	// meta accessors
+	unsigned short PC() const { return _pc; }
+
+public:
+	static size_t ReadProgram(const char* filename, unsigned char* buffer, size_t bufferSize);
 
 private:
 	unsigned char _memory[TotalMemoryBytes];	// 4K of memory
