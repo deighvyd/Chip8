@@ -50,6 +50,16 @@ unsigned char Chip8::Register(unsigned int reg) const
 	return _v[reg];
 }
 
+unsigned char Chip8::Memory(unsigned int loc) const
+{
+	if (loc >= TotalMemoryBytes)
+	{
+		return 0;
+	}
+
+	return _memory[loc];
+}
+
 bool Chip8::LoadProgram(const char* filename) 
 {
 	size_t size = ReadProgram(filename, &(_memory[ProgramStart]), TotalMemoryBytes - ProgramStart);

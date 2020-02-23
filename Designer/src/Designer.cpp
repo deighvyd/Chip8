@@ -53,8 +53,39 @@ void Designer::OnGui()
 		ImGui::Columns(4, 0, false);
 		for (unsigned int reg = 0 ; reg < Chip8::NumRegisers ; ++reg)
 		{
-			ImGui::Text("V%X:\t0x%X", reg, _chip8->Register(reg));
+			ImGui::Text("V%X:\t0x%02X", reg, _chip8->Register(reg));
 			ImGui::NextColumn();
+		}
+		ImGui::Columns(1);
+		
+		ImGui::End();
+	}
+
+	if (ImGui::Begin("Memory"))
+	{
+		// TODO - binary view?
+
+		static constexpr int BytesPerRow = 16;
+		
+		unsigned int numColumns = (BytesPerRow / 4);
+		unsigned int numRows = Chip8::TotalMemoryBytes / BytesPerRow;
+
+		ImGui::Columns(numColumns + 1, 0, false);
+		for (unsigned int row = 0 ; row < numRows ; ++row)
+		{
+			ImGui::Text("%04X:", (row * BytesPerRow));
+			ImGui::NextColumn();
+
+			for (unsigned int col = 0 ; col < numColumns; ++col)
+			{
+				unsigned int loc = (row * BytesPerRow) + col;
+				ImGui::Text("0x%02X%02X%02X%02X", 
+							_chip8->Memory(loc), 
+							_chip8->Memory(loc + 1), 
+							_chip8->Memory(loc + 2), 
+							_chip8->Memory(loc + 3));
+				ImGui::NextColumn();
+			}
 		}
 		ImGui::Columns(1);
 		
