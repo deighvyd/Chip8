@@ -3,8 +3,11 @@
 #include "Designer.h"
 
 #include "Chip8.h"
+#include "Log.h"
 
 #include "imgui/imgui.h"
+
+using namespace logging;
 
 Designer::Designer()
 	: Application(1280, 720)
@@ -18,8 +21,7 @@ Designer::Designer()
 	if (_programSize == 0)
 	{
 		MessageBox(_hWnd, L"Could not read program", L"Error", MB_OK);
-		return;
-	}
+	}	
 }
 
 Designer::~Designer()
@@ -29,6 +31,57 @@ Designer::~Designer()
 
 	delete _program;
 	_program = nullptr;
+
+	// TODO - release the texture memory?????
+}
+
+bool Designer::Initialize(LPCWSTR name)
+{
+	if (!Application::Initialize(name))
+	{
+		return false;
+	}
+
+	if (!InitGfxTexture())
+	{
+		MessageBox(_hWnd, L"Failed to initialize the gfx texture", L"Error", MB_OK);
+		// not fata so do no bail
+	}
+
+	return true;
+}
+
+bool Designer::InitGfxTexture()
+{
+	int texWidth = (Chip8::ScreenWidth * DisplayScale);
+	int texHeight = (Chip8::ScreenHeight * DisplayScale);
+
+	size_t bufferSize = (texWidth * texHeight) * 4;
+	unsigned char* data = new unsigned char[bufferSize];
+	if (data == nullptr)
+	{
+		Info("Error: could not allocate memory for the gfx texture");
+		return false;
+	}
+	memset(data, 0x00000000, bufferSize);
+
+    GLuint texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);\
+	_gfxTextureId = (ImTextureID)texture;
+
+    // setup filtering parameters for display
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	
+    // upload pixels into texture
+	// TODO - allow this to be regenerated
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	
+	delete data;
+	
+	return true;
 }
 
 void Designer::OnGui()
@@ -89,6 +142,12 @@ void Designer::OnGui()
 		}
 		ImGui::Columns(1);
 		
+		ImGui::End();
+	}
+
+	if (ImGui::Begin("Emulator"))
+	{
+		ImGui::Image(_gfxTextureId, { Chip8::ScreenWidth * DisplayScale, Chip8::ScreenHeight * DisplayScale});
 		ImGui::End();
 	}
 }

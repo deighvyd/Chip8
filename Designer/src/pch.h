@@ -4,3 +4,5 @@
 #include <windows.h>
 
 #include <assert.h>
+
+#include <gl\gl.h>
