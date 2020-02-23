@@ -266,16 +266,8 @@ void Gui::EndRender(OpenGL* openGL, HWND hWnd, Input* input)
 
                 if (clipRect.x < fbWidth && clipRect.y < fbHeight && clipRect.z >= 0.0f && clipRect.w >= 0.0f)
                 {
-                    // Apply scissor/clipping rectangle
-                    if (clip_origin_lower_left)
-                    {
-                        glScissor((int)clipRect.x, (int)(fbHeight - clipRect.w), (int)(clipRect.z - clipRect.x), (int)(clipRect.w - clipRect.y));
-                    }
-                    else
-                    {
-                        glScissor((int)clipRect.x, (int)clipRect.y, (int)clipRect.z, (int)clipRect.w); // Support for GL 4.5 rarely used glClipControl(GL_UPPER_LEFT)
-                    }
-
+                    glScissor((int)clipRect.x, (int)(fbHeight - clipRect.w), (int)(clipRect.z - clipRect.x), (int)(clipRect.w - clipRect.y));
+                    
                     // Bind texture, Draw
                     glBindTexture(GL_TEXTURE_2D, (GLuint)(intptr_t)pcmd->TextureId);
 #if IMGUI_IMPL_OPENGL_MAY_HAVE_VTX_OFFSET

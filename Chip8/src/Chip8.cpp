@@ -40,6 +40,16 @@ void Chip8::Initialize()
 	memcpy(_memory, Font, NumFontChars);
 }
 
+unsigned char Chip8::Register(unsigned int reg) const
+{
+	if (reg >= NumRegisers)
+	{
+		return 0;
+	}
+
+	return _v[reg];
+}
+
 bool Chip8::LoadProgram(const char* filename) 
 {
 	size_t size = ReadProgram(filename, &(_memory[ProgramStart]), TotalMemoryBytes - ProgramStart);

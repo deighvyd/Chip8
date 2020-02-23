@@ -45,4 +45,19 @@ void Designer::OnGui()
 
 		ImGui::End();
 	}
+
+	if (ImGui::Begin("Registers"))
+	{
+		// TODO - binary view?
+
+		ImGui::Columns(4, 0, false);
+		for (unsigned int reg = 0 ; reg < Chip8::NumRegisers ; ++reg)
+		{
+			ImGui::Text("V%X:\t0x%X", reg, _chip8->Register(reg));
+			ImGui::NextColumn();
+		}
+		ImGui::Columns(1);
+		
+		ImGui::End();
+	}
 }

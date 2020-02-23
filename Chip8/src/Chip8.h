@@ -57,6 +57,7 @@ public:
 
 	// meta accessors
 	unsigned short PC() const { return _pc; }
+	unsigned char Register(unsigned int reg) const;
 
 public:
 	static size_t ReadProgram(const char* filename, unsigned char* buffer, size_t bufferSize);
