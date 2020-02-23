@@ -2,16 +2,17 @@
 
 #include "Application.h"
 
-class Emulator : public Application
+class Designer : public Application
 {
 public:
-	Emulator();
-	Emulator(Emulator const&) = delete;
-    Emulator& operator=(Emulator const&) = delete;
-	virtual ~Emulator();
+	Designer();
+	Designer(Designer const&) = delete;
+    Designer& operator=(Designer const&) = delete;
+	virtual ~Designer();
 
 	virtual void OnUpdate() override {}
 	virtual void OnDraw() override {}
+	virtual void OnGui() override {}
 
 };
 

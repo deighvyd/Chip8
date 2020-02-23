@@ -4,14 +4,14 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
 {
-	Emulator* debugger = new Emulator();
-	if (debugger->Initialize(L"Chip8 Designer"))
+	Designer* designer = new Designer();
+	if (designer->Initialize(L"Chip8 Designer"))
 	{
-		debugger->Run();
+		designer->Run();
 	}
 
-	debugger->Shutdown();
-	delete debugger;
+	designer->Shutdown();
+	delete designer;
 
 	return 0;
 }

@@ -36,9 +36,30 @@ protected:
 	void OutputLinkerErrorMessage(OpenGL* openGL, HWND hWnd, unsigned int programId);
 	void ShutdownShader(OpenGL* openGL);
 
+public:
+	template<class ShaderType>
+	static bool InitShader(Shader*& shader, OpenGL* openGL, HWND hWnd);
+	void DestroyShader(Shader*& shader, OpenGL* openGL);
+
 protected:
 	GLuint _vertexShader;
 	GLuint _fragmentShader;
 	GLuint _shaderProgram;
 
 };
+
+template<class ShaderType>
+bool Shader::InitShader(Shader*& shader, OpenGL* openGL, HWND hWnd)
+{
+	if ((shader = new ShaderType()) == nullptr)
+	{
+		return false;
+	}
+
+	if (!shader->Initialize(openGL, hWnd))
+	{
+		return false;
+	}
+
+	return true;
+}

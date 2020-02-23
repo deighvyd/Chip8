@@ -240,3 +240,13 @@ void Shader::ShutdownShader(OpenGL* openGL)
 
 	openGL->glDeleteProgram(_shaderProgram);
 }
+
+void Shader::DestroyShader(Shader*& shader, OpenGL* openGL)
+{
+	if (shader != nullptr)
+	{
+		shader->Shutdown(openGL);
+		delete shader;
+		shader = nullptr;
+	}
+}

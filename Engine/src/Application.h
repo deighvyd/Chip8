@@ -18,6 +18,7 @@ public:
 
 	virtual void OnUpdate() = 0;
 	virtual void OnDraw() = 0;
+	virtual void OnGui() = 0;
 
 	LRESULT CALLBACK MessageHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 

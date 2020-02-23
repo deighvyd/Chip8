@@ -36,9 +36,7 @@ namespace detail
         "    Out_Color = Frag_Color * texture(Texture, Frag_UV.st);\n"
         "}\n";
 
-    static bool ShowDemoWindow = true;
-    static bool ShowOtherWindow = false;
-    static ImVec4 ClearColour = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    static bool ShowDemoWindow = false;
 
     static double Time = 0.0;
 
@@ -191,7 +189,7 @@ void Gui::Shutdown(OpenGL* openGL)
     }
 }
 
-void Gui::Render(OpenGL* openGL, HWND hWnd, Input* input)
+void Gui::BeginRender(OpenGL* openGL, HWND hWnd, Input* input)
 {
     NewFrame(hWnd, input);
 
@@ -200,43 +198,12 @@ void Gui::Render(OpenGL* openGL, HWND hWnd, Input* input)
     {
         ImGui::ShowDemoWindow(&detail::ShowDemoWindow);
     }
+}
 
-    static float f = 0.0f;
-    static int counter = 0;
-
-    ImGui::Begin("Hello, world!");                          
-
-    ImGui::Text("This is some useful text.");               
-    ImGui::Checkbox("Demo Window", &detail::ShowDemoWindow);
-    ImGui::Checkbox("Another Window", &detail::ShowOtherWindow);
-
-    ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-    ImGui::ColorEdit3("clear color", (float*)&detail::ClearColour);
-
-    if (ImGui::Button("Button"))
-    {
-        counter++;
-    }
-    ImGui::SameLine();
-    ImGui::Text("counter = %d", counter);
-
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-    ImGui::End();
-
-    if (detail::ShowOtherWindow)
-    {
-        ImGui::Begin("Another Window", &detail::ShowOtherWindow);
-        ImGui::Text("Hello from another window!");
-        if (ImGui::Button("Close Me"))
-        {
-            detail::ShowOtherWindow = false;
-        }
-        ImGui::End();
-    }
-
+void Gui::EndRender(OpenGL* openGL, HWND hWnd, Input* input)
+{
     // render
     ImGui::Render();
-
 
     GLint dims[4] = {0};
     glGetIntegerv(GL_VIEWPORT, dims);
@@ -257,7 +224,7 @@ void Gui::Render(OpenGL* openGL, HWND hWnd, Input* input)
 
     openGL->glActiveTexture(GL_TEXTURE0);
     
-    //bool clip_origin_lower_left = true;
+    bool clip_origin_lower_left = true;
 
     // Setup desired GL state
     // Recreate the VAO every time (this is to easily allow multiple GL contexts to be rendered to. VAO are not shared among GL contexts)
@@ -306,14 +273,14 @@ void Gui::Render(OpenGL* openGL, HWND hWnd, Input* input)
                 if (clipRect.x < fbWidth && clipRect.y < fbHeight && clipRect.z >= 0.0f && clipRect.w >= 0.0f)
                 {
                     // Apply scissor/clipping rectangle
-                    //if (clip_origin_lower_left)
-                    //{
-                    //    glScissor((int)clipRect.x, (int)(fbHeight - clipRect.w), (int)(clipRect.z - clipRect.x), (int)(clipRect.w - clipRect.y));
-                    //}
-                    //else
-                    //{
-                    //    glScissor((int)clipRect.x, (int)clipRect.y, (int)clipRect.z, (int)clipRect.w); // Support for GL 4.5 rarely used glClipControl(GL_UPPER_LEFT)
-                    //}
+                    if (clip_origin_lower_left)
+                    {
+                        glScissor((int)clipRect.x, (int)(fbHeight - clipRect.w), (int)(clipRect.z - clipRect.x), (int)(clipRect.w - clipRect.y));
+                    }
+                    else
+                    {
+                        glScissor((int)clipRect.x, (int)clipRect.y, (int)clipRect.z, (int)clipRect.w); // Support for GL 4.5 rarely used glClipControl(GL_UPPER_LEFT)
+                    }
 
                     // Bind texture, Draw
                     glBindTexture(GL_TEXTURE_2D, (GLuint)(intptr_t)pcmd->TextureId);

@@ -5,6 +5,9 @@
 class Emulator : public Application
 {
 public:
+	static constexpr int Scale = 10;
+
+public:
 	Emulator();
 	Emulator(Emulator const&) = delete;
     Emulator& operator=(Emulator const&) = delete;
@@ -12,6 +15,7 @@ public:
 
 	virtual void OnUpdate() override {}
 	virtual void OnDraw() override {}
+	virtual void OnGui() override {}
 
 };
 

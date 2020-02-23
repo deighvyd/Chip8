@@ -2,11 +2,11 @@
 
 #include "Designer.h"
 
-Emulator::Emulator()
+Designer::Designer()
 	: Application(1280, 720)
 {
 }
 
-Emulator::~Emulator()
+Designer::~Designer()
 {
 }

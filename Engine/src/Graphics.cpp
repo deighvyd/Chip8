@@ -2,52 +2,15 @@
 
 #include "Graphics.h"
 
+#include "Application.h"
 #include "Camera.h"
 #include "Gui.h"
 #include "Light.h"
-#include "Model.h"
 #include "OpenGL.h"
-
-#include "ColourShader.h"
-#include "LightShader.h"
-#include "TextureShader.h"
-
-namespace detail
-{
-	template<class ShaderType>
-	bool InitShader(Shader*& shader, OpenGL* openGL, HWND hWnd)
-	{
-		if ((shader = new ShaderType()) == nullptr)
-		{
-			return false;
-		}
-
-		if (!shader->Initialize(openGL, hWnd))
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	void DestroyShader(Shader*& shader, OpenGL* openGL)
-	{
-		if (shader != nullptr)
-		{
-			shader->Shutdown(openGL);
-			delete shader;
-			shader = nullptr;
-		}
-	}
-}
 
 Graphics::Graphics()
 	: _openGL(nullptr)
 	, _camera(nullptr)
-	, _model(nullptr)
-	, _colourShader(nullptr)
-	, _textureShader(nullptr)
-	, _lightShader(nullptr)
 	, _light(nullptr)
 	, _gui(nullptr)
 {
@@ -71,35 +34,6 @@ bool Graphics::Initialize(OpenGL* openGL, HWND hWnd, Input* input)
 		return false;
 	}
 	_camera->SetPosition(0.0f, 0.0f, -10.0f);
-
-	if ((_model = new Model()) == nullptr)
-	{
-		return false;
-	}
-
-	if (!_model->Initialize(_openGL, "models/cube.txt", "textures/stone.tga", 1, true))
-	{
-		MessageBox(hWnd, L"Could not initialize the model object.", L"Error", MB_OK);
-		return false;
-	}
-	
-	if (!detail::InitShader<ColourShader>(_colourShader, _openGL, hWnd))
-	{
-		MessageBox(hWnd, L"Could not initialize the colour shader object.", L"Error", MB_OK);
-		return false;
-	}
-
-	if (!detail::InitShader<TextureShader>(_textureShader, _openGL, hWnd))
-	{
-		MessageBox(hWnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
-		return false;
-	}
-
-	if (!detail::InitShader<LightShader>(_lightShader, _openGL, hWnd))
-	{
-		MessageBox(hWnd, L"Could not initialize the light shader object.", L"Error", MB_OK);
-		return false;
-	}
 
 	// create a light object
 	if ((_light = new Light()) == nullptr)
@@ -140,17 +74,6 @@ void Graphics::Shutdown()
 	{
 		delete _light;
 		_light = nullptr;
-	}
-
-	detail::DestroyShader(_lightShader, _openGL);
-	detail::DestroyShader(_textureShader, _openGL);
-	detail::DestroyShader(_colourShader, _openGL);
-	
-	if (_model)
-	{
-		_model->Shutdown(_openGL);
-		delete _model;
-		_model = nullptr;
 	}
 
 	if (_camera)
@@ -208,21 +131,10 @@ bool Graphics::Render(HWND hWnd, Input* input, float rotation)
 	float ambientLight[4];
 	_light->GetAmbientLight(ambientLight);
 
-	// rotate the world matrix by the value passed in
-	_openGL->MatrixRotationY(worldMatrix, rotation);
-
-	// render the model using the shader
-
-	//Shader* shader = _colourShader;
-	//Shader* shader = _textureShader;
-	Shader* shader = _lightShader;
-	
-	shader->SetShader(_openGL);
-	shader->SetShaderParameters(_openGL, worldMatrix, viewMatrix, projectionMatrix, 1, lightDirection, diffuseLightColor, ambientLight);
-
-	_model->Render(_openGL);
-
-	_gui->Render(_openGL, hWnd, input);
+	// TODO - this is shit I dont want to call out to the application instance here
+	_gui->BeginRender(_openGL, hWnd, input);
+	Application::Instance()->OnGui();
+	_gui->EndRender(_openGL, hWnd, input);
 
 	_openGL->EndScene();
 

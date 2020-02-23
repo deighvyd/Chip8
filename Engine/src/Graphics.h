@@ -32,11 +32,6 @@ private:
 	OpenGL* _openGL;
 
 	Camera* _camera;
-	Model* _model;
-	Shader* _colourShader;
-	Shader* _textureShader;
-	Shader* _lightShader;
-
 	Light* _light;
 
 	Gui* _gui;

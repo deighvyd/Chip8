@@ -2,8 +2,10 @@
 
 #include "Emulator.h"
 
+#include "Chip8.h"
+
 Emulator::Emulator()
-	: Application(1280, 720)
+	: Application(Scale * Chip8::ScreenWidth, Scale * Chip8::ScreenHeight)
 {
 }
 
