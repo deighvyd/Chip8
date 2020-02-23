@@ -1,10 +1,10 @@
 #include "pch.h"
 
-#include "Debugger.h"
+#include "Designer.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
 {
-	Debugger* debugger = new Debugger();
+	Designer* debugger = new Designer();
 	if (debugger->Initialize(L"Chip8 Editor"))
 	{
 		debugger->Run();

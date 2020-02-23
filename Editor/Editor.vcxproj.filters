@@ -21,7 +21,7 @@
     <ClCompile Include="src\pch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Debugger.cpp">
+    <ClCompile Include="src\Designer.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,7 +29,7 @@
     <ClInclude Include="src\pch.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Debugger.h">
+    <ClInclude Include="src\Designer.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
