@@ -10,7 +10,7 @@ public:
 	static Application* Instance();
 
 public:
-	bool Initialize(LPCWSTR name);
+	virtual bool Initialize(LPCWSTR name);
 	void Shutdown();
 	void Run();
 
