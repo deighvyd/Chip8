@@ -35,7 +35,7 @@ protected:
     Application& operator=(Application const&) = delete;
 	virtual ~Application();
 
-private:
+protected:
 	LPCWSTR _name;
 	HINSTANCE _hInstance;
 	HWND _hWnd;
