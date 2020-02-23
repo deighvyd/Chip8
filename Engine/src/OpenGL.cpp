@@ -183,6 +183,12 @@ void OpenGL::Shutdown(HWND hWnd)
 
 void OpenGL::BeginScene(float red, float green, float blue, float alpha)
 {
+	GLint dims[4] = {0};
+    glGetIntegerv(GL_VIEWPORT, dims);
+    GLint displayWidth = dims[2];
+    GLint displayHeight = dims[3];
+
+    glViewport(0, 0, displayWidth, displayHeight);
 	glClearColor(red, green, blue, alpha); 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }

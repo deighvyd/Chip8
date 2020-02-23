@@ -202,15 +202,7 @@ void Gui::BeginRender(OpenGL* openGL, HWND hWnd, Input* input)
 
 void Gui::EndRender(OpenGL* openGL, HWND hWnd, Input* input)
 {
-    // render
     ImGui::Render();
-
-    GLint dims[4] = {0};
-    glGetIntegerv(GL_VIEWPORT, dims);
-    GLint displayWidth = dims[2];
-    GLint displayHeight = dims[3];
-
-    glViewport(0, 0, displayWidth, displayHeight);
 
     // rener draw data
     ImDrawData* drawData = ImGui::GetDrawData();
@@ -224,7 +216,9 @@ void Gui::EndRender(OpenGL* openGL, HWND hWnd, Input* input)
 
     openGL->glActiveTexture(GL_TEXTURE0);
     
-    bool clip_origin_lower_left = true;
+    // cache previous state
+    GLint prevScissorBox[4]; 
+    glGetIntegerv(GL_SCISSOR_BOX, prevScissorBox);
 
     // Setup desired GL state
     // Recreate the VAO every time (this is to easily allow multiple GL contexts to be rendered to. VAO are not shared among GL contexts)
@@ -299,6 +293,9 @@ void Gui::EndRender(OpenGL* openGL, HWND hWnd, Input* input)
 
     // destroy the temporary VAO
     openGL->glDeleteVertexArrays(1, &vertexArrayHandle);
+
+    // restore the previous state
+    glScissor(prevScissorBox[0], prevScissorBox[1], (GLsizei)prevScissorBox[2], (GLsizei)prevScissorBox[3]);
 }
 
 bool Gui::SetupRenderState(OpenGL* openGL, ImDrawData* drawData, int fbWidth, int fbHeight, GLuint vertexArrayHandle)
@@ -308,7 +305,7 @@ bool Gui::SetupRenderState(OpenGL* openGL, ImDrawData* drawData, int fbWidth, in
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDisable(GL_CULL_FACE);
     glDisable(GL_DEPTH_TEST);
-    //glEnable(GL_SCISSOR_TEST);
+    glEnable(GL_SCISSOR_TEST);
 #ifdef GL_POLYGON_MODE
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 #endif
