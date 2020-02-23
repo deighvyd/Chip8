@@ -20,6 +20,40 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Emulator", "Emulator\Emulat
 		{2FFE4AEE-B2E8-4453-A706-523701782277} = {2FFE4AEE-B2E8-4453-A706-523701782277}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{45CC3B14-E0CF-4BC1-967B-D1AEC9D334C1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shaders", "shaders", "{51E41FD8-E854-486B-81F9-3398C9AF4411}"
+	ProjectSection(SolutionItems) = preProject
+		assets\shaders\colour.ps = assets\shaders\colour.ps
+		assets\shaders\colour.vs = assets\shaders\colour.vs
+		assets\shaders\light.ps = assets\shaders\light.ps
+		assets\shaders\light.vs = assets\shaders\light.vs
+		assets\shaders\texture.ps = assets\shaders\texture.ps
+		assets\shaders\texture.vs = assets\shaders\texture.vs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "fonts", "fonts", "{1F9D9047-8B58-49F9-A196-86749200FE57}"
+	ProjectSection(SolutionItems) = preProject
+		assets\fonts\cousine-regular.ttf = assets\fonts\cousine-regular.ttf
+		assets\fonts\droidsans.ttf = assets\fonts\droidsans.ttf
+		assets\fonts\karla-regular.ttf = assets\fonts\karla-regular.ttf
+		assets\fonts\proggyclean.ttf = assets\fonts\proggyclean.ttf
+		assets\fonts\proggytiny.ttf = assets\fonts\proggytiny.ttf
+		assets\fonts\roboto-medium.ttf = assets\fonts\roboto-medium.ttf
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "textures", "textures", "{A6744F2A-E186-4400-B332-F0D24E657866}"
+	ProjectSection(SolutionItems) = preProject
+		assets\textures\opengl.tga = assets\textures\opengl.tga
+		assets\textures\stone.tga = assets\textures\stone.tga
+		assets\textures\test.tga = assets\textures\test.tga
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "models", "models", "{00586746-6CAF-47D9-B98E-F4D3016196CB}"
+	ProjectSection(SolutionItems) = preProject
+		assets\models\cube.txt = assets\models\cube.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -63,6 +97,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{51E41FD8-E854-486B-81F9-3398C9AF4411} = {45CC3B14-E0CF-4BC1-967B-D1AEC9D334C1}
+		{1F9D9047-8B58-49F9-A196-86749200FE57} = {45CC3B14-E0CF-4BC1-967B-D1AEC9D334C1}
+		{A6744F2A-E186-4400-B332-F0D24E657866} = {45CC3B14-E0CF-4BC1-967B-D1AEC9D334C1}
+		{00586746-6CAF-47D9-B98E-F4D3016196CB} = {45CC3B14-E0CF-4BC1-967B-D1AEC9D334C1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8CFD06F0-8F06-4DAC-8F18-8B4AD7EB1311}

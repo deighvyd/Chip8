@@ -4,15 +4,6 @@
     <Filter Include="src">
       <UniqueIdentifier>{50012601-89cd-4430-a52c-c4d202258475}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shaders">
-      <UniqueIdentifier>{b8b36214-afb0-4b41-92c4-8588635a6cd6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="models">
-      <UniqueIdentifier>{0084455d-d6ef-4fb8-a979-ad6355d7ac3f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="textures">
-      <UniqueIdentifier>{2e410ab7-6ee7-4fb9-91df-56e8c1c8d8e5}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -32,41 +23,5 @@
     <ClInclude Include="src\Designer.h">
       <Filter>src</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="shaders\colour.vs">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\colour.ps">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\light.ps">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\light.vs">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\texture.ps">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\texture.vs">
-      <Filter>shaders</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="textures\stone.tga">
-      <Filter>textures</Filter>
-    </Image>
-    <Image Include="textures\test.tga">
-      <Filter>textures</Filter>
-    </Image>
-    <Image Include="textures\opengl.tga">
-      <Filter>textures</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="models\cube.txt">
-      <Filter>models</Filter>
-    </Text>
   </ItemGroup>
 </Project>

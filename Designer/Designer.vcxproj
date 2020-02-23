@@ -31,22 +31,6 @@
     <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\colour.ps" />
-    <None Include="shaders\colour.vs" />
-    <None Include="shaders\light.ps" />
-    <None Include="shaders\light.vs" />
-    <None Include="shaders\texture.ps" />
-    <None Include="shaders\texture.vs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="models\cube.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="textures\opengl.tga" />
-    <Image Include="textures\stone.tga" />
-    <Image Include="textures\test.tga" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.vcxproj">
       <Project>{0b555490-4cbf-4a3f-8c5a-b8c61a7840c0}</Project>
     </ProjectReference>
