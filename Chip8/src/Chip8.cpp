@@ -38,6 +38,8 @@ void Chip8::Initialize()
 
 	// Load fontset
 	memcpy(_memory, Font, NumFontChars);
+
+	_draw = false;
 }
 
 unsigned char Chip8::Register(unsigned int reg) const
@@ -58,6 +60,17 @@ unsigned char Chip8::Memory(unsigned int loc) const
 	}
 
 	return _memory[loc];
+}
+
+unsigned char Chip8::Pixel(int x, int y) const
+{
+	if (x < 0 || x >= ScreenWidth || y < 0 || y > ScreenHeight)
+	{
+		Info("Error: pixel out of range (%d, %d)", x, y);
+		return 0;
+	}
+
+	return _gfx[(ScreenHeight * y) + x];
 }
 
 bool Chip8::LoadProgram(const char* filename) 
@@ -106,6 +119,8 @@ size_t Chip8::ReadProgram(const char* filename, unsigned char* buffer, size_t bu
 
 void Chip8::EmulateCycle()
 {
+	_draw = false;
+
 	// fetch and execute the next op code
 	unsigned short opCode = (_memory[_pc] << 8 | _memory[_pc + 1]);
 
@@ -118,10 +133,10 @@ void Chip8::EmulateCycle()
 			switch(opCode & 0x00FF)
 			{
 				// 00E0 	Display 	disp_clear() 	Clears the screen
-				case 0x00E0:
+				/*case 0x00E0:
 				{
 					break;
-				}
+				}*/
  
 				// 00EE 	Flow 	return; 	Returns from a subroutine 
 				case 0x000E: 
@@ -146,6 +161,18 @@ void Chip8::EmulateCycle()
 		{
 			_stack[_sp++] = _pc;
 			_pc = opCode & 0x0FFF;
+			break;
+		}
+
+		// 6XNN 	Const 	Vx = NN 	Sets VX to NN
+		case 0x6000:
+		{
+			unsigned short v = (opCode & 0x0F00) >> 8;
+			unsigned char val = (opCode & 0x00FF);
+			assert(v < NumRegisers);
+			_v[v] = val;
+			
+			_pc += 2;
 			break;
 		}
 
@@ -199,7 +226,7 @@ void Chip8::EmulateCycle()
 					break;
 				}
 
-				case 0x0005:
+				/*case 0x0005:
 				{
 					
 					break;
@@ -218,7 +245,7 @@ void Chip8::EmulateCycle()
 				case 0x000E:
 				{
 					break;
-				}
+				}*/
 
 				default:
 				{
@@ -271,6 +298,7 @@ void Chip8::EmulateCycle()
 			// TODO = set the draw flag
 
 			_pc += 2;
+			_draw = true;
 			break;
 		}
 

@@ -57,8 +57,11 @@ public:
 
 	// meta accessors
 	unsigned short PC() const { return _pc; }
+	unsigned short I() const { return _i; }
 	unsigned char Register(unsigned int reg) const;
 	unsigned char Memory(unsigned int loc) const;
+	bool Draw() const { return _draw; }
+	unsigned char Pixel(int x, int y) const;
 
 public:
 	static size_t ReadProgram(const char* filename, unsigned char* buffer, size_t bufferSize);
@@ -80,5 +83,7 @@ private:
 	unsigned short _sp;
 
 	unsigned char _keys[NumKeys];
+
+	bool _draw;
 
 };
