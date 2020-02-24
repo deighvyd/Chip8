@@ -9,6 +9,15 @@
 
 using namespace logging;
 
+/*static */int Designer::DisplayWidth()
+{
+	return (Chip8::ScreenWidth * DisplayScale);
+}
+
+/*static */int Designer::DisplayHeight()
+{
+	return (Chip8::ScreenWidth * DisplayScale);
+}
 Designer::Designer()
 	: Application(1280, 720)
 {
@@ -32,6 +41,9 @@ Designer::~Designer()
 	delete _program;
 	_program = nullptr;
 
+	delete _gfxTexture;
+	_gfxTexture = nullptr;
+
 	// TODO - release the texture memory?????
 }
 
@@ -42,30 +54,58 @@ bool Designer::Initialize(LPCWSTR name)
 		return false;
 	}
 
-	if (!InitGfxTexture())
-	{
-		MessageBox(_hWnd, L"Failed to initialize the gfx texture", L"Error", MB_OK);
-		// not fata so do no bail
-	}
+	assert(_gfxTexture == nullptr);
 
-	return true;
-}
-
-bool Designer::InitGfxTexture()
-{
-	int texWidth = (Chip8::ScreenWidth * DisplayScale);
-	int texHeight = (Chip8::ScreenHeight * DisplayScale);
-
-	size_t bufferSize = (texWidth * texHeight) * 4;
-	unsigned char* data = new unsigned char[bufferSize];
-	if (data == nullptr)
+	// allocate a buffer for the texture data
+	size_t bufferSize = (DisplayWidth() * DisplayHeight()) * 4;
+	_gfxTexture = new unsigned char[bufferSize];
+	if (_gfxTexture == nullptr)
 	{
 		Info("Error: could not allocate memory for the gfx texture");
 		return false;
 	}
-	memset(data, 0x00000000, bufferSize);
+	memset(_gfxTexture, 0x00000000, bufferSize);
 
-    GLuint texture;
+	return true;
+}
+
+bool Designer::DrawGfxTexture()
+{
+	// clear the texture
+	size_t bufferSize = (DisplayWidth() * DisplayHeight()) * 4;
+	memset(_gfxTexture, 0x00000000, bufferSize);
+
+	// TODO - draw
+	for (int y = 0 ; y < Chip8::ScreenHeight ; ++y)
+	{
+		for (int x = 0 ; x < Chip8::ScreenWidth ; ++x)
+		{
+			unsigned char pixel = _chip8->Pixel(x, y);
+
+			int startX = (DisplayScale * x);
+			int startY = (DisplayScale * y);
+			for (int y2 = startY ; y2 < (startY + DisplayScale) ; ++y2)
+			{
+				for (int x2 = startX ; x2 < (startX + DisplayScale) ; ++x2)
+				{
+					int pixelIdx = (y2 * DisplayHeight()) + x2;
+					if (pixel == 0)
+					{
+						_gfxTexture[pixelIdx] = 0x00000000;
+					}
+					else
+					{
+						_gfxTexture[pixelIdx] = 0xFFFFFFFF;
+					}
+				}
+			}
+		}
+	}
+
+	// TODO - release the old texture
+
+	// build the texture
+	GLuint texture;
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
 	_gfxTextureId = (ImTextureID)texture;
@@ -77,9 +117,7 @@ bool Designer::InitGfxTexture()
     // upload pixels into texture
 	// TODO - allow this to be regenerated
     glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-	
-	delete data;
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, DisplayWidth(), DisplayHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, _gfxTexture);
 	
 	return true;
 }
@@ -97,6 +135,15 @@ bool Designer::RunFrame()
 		if (_step > 0)
 		{
 			--_step;
+		}
+	}
+
+	if (_chip8->Draw())
+	{
+		if (!DrawGfxTexture())
+		{
+			MessageBox(_hWnd, L"Failed to update the gfx texture", L"Error", MB_OK);
+			// not fatal so do no bail
 		}
 	}
 
@@ -122,6 +169,7 @@ void Designer::OnGui()
 		}
 
 		assert((_programSize % 2) == 0);
+		ImGui::BeginChild("instructions");
 
 		for (unsigned short pc = 0 ; pc < _programSize ; pc += 2)
 		{
@@ -140,12 +188,14 @@ void Designer::OnGui()
 			}
 		}
 
+		ImGui::EndChild();
 		ImGui::End();
 	}
 
 	if (ImGui::Begin("Registers"))
 	{
 		// TODO - binary view?
+		ImGui::Text("I:\t0x%02X", _chip8->I());
 
 		ImGui::Columns(4, 0, false);
 		for (unsigned int reg = 0 ; reg < Chip8::NumRegisers ; ++reg)

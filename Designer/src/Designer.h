@@ -24,7 +24,11 @@ protected:
 	virtual bool RunFrame() override;
 
 private:
-	bool InitGfxTexture();
+	bool DrawGfxTexture();
+
+private:
+	static int DisplayWidth();
+	static int DisplayHeight();
 
 private:
 	static constexpr unsigned int DisplayScale = 10;
@@ -40,6 +44,7 @@ private:
 	unsigned char* _program = nullptr;		// store our own copy of the program so we don't have to pollute the emulator
 
 	ImTextureID _gfxTextureId;
+	unsigned char* _gfxTexture = nullptr;
 
 };
 
