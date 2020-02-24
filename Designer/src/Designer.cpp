@@ -67,7 +67,7 @@ bool Designer::InitGfxTexture()
 
     GLuint texture;
     glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);\
+    glBindTexture(GL_TEXTURE_2D, texture);
 	_gfxTextureId = (ImTextureID)texture;
 
     // setup filtering parameters for display
@@ -84,16 +84,60 @@ bool Designer::InitGfxTexture()
 	return true;
 }
 
+bool Designer::RunFrame()
+{
+	if (!Application::RunFrame())
+	{
+		return false;
+	}
+
+	if (!_paused || _step > 0)
+	{
+		_chip8->EmulateCycle();
+		if (_step > 0)
+		{
+			--_step;
+		}
+	}
+
+	return true;
+}
+
 void Designer::OnGui()
 {
 	if (ImGui::Begin("Program"))
 	{
+		if (ImGui::Button(_paused ? "Play" : "Pause"))
+		{
+			_paused = !_paused;
+			_step = 0;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Step"))
+		{
+			if (_paused)
+			{
+				++_step;
+			}
+		}
+
 		assert((_programSize % 2) == 0);
 
 		for (unsigned short pc = 0 ; pc < _programSize ; pc += 2)
 		{
+			bool active = pc == (_chip8->PC() - Chip8::ProgramStart);
+			if (active)
+			{
+				ImGui::PushStyleColor(ImGuiCol_Text, { 0.0f, 1.0f, 0.0f, 1.0f });
+			}
+
 			unsigned short opCode = (_program[pc] << 8 | _program[pc + 1]);
 			ImGui::Text("%04d:\t0x%04X", (pc / 2) + 1, opCode);
+
+			if (active)
+			{
+				ImGui::PopStyleColor(1);
+			}
 		}
 
 		ImGui::End();

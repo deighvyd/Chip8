@@ -20,6 +20,9 @@ public:
 	virtual void OnDraw() override {}
 	virtual void OnGui() override;
 
+protected:
+	virtual bool RunFrame() override;
+
 private:
 	bool InitGfxTexture();
 
@@ -28,6 +31,9 @@ private:
 
 private:
 	Chip8* _chip8 = nullptr;
+
+	bool _paused = true;	// default to paused because Debugger
+	unsigned int _step = 0;
 
 	const char* _programFile;
 	size_t _programSize = 0;
