@@ -70,7 +70,7 @@ unsigned char Chip8::Pixel(int x, int y) const
 		return 0;
 	}
 
-	return _gfx[(ScreenHeight * y) + x];
+	return _gfx[x + (ScreenWidth * y)];
 }
 
 bool Chip8::LoadProgram(const char* filename) 
@@ -117,9 +117,14 @@ size_t Chip8::ReadProgram(const char* filename, unsigned char* buffer, size_t bu
 	return read;
 }
 
-void Chip8::EmulateCycle()
+void Chip8::EmulateCycle(bool paused)
 {
 	_draw = false;
+
+	if (paused)
+	{
+		return;
+	}
 
 	// fetch and execute the next op code
 	unsigned short opCode = (_memory[_pc] << 8 | _memory[_pc + 1]);
@@ -139,9 +144,10 @@ void Chip8::EmulateCycle()
 				}*/
  
 				// 00EE 	Flow 	return; 	Returns from a subroutine 
-				case 0x000E: 
+				case 0x00EE: 
 				{
-					_pc = _stack[_sp--];
+					_sp--;
+					_pc = _stack[_sp];
 					_pc += 2;
 					break;
 				}
@@ -172,6 +178,17 @@ void Chip8::EmulateCycle()
 			assert(v < NumRegisers);
 			_v[v] = val;
 			
+			_pc += 2;
+			break;
+		}
+
+		// 7XNN 	Const 	Vx += NN 	Adds NN to VX. (Carry flag is not changed) 
+		case 0x7000:
+		{
+			unsigned short v = (opCode & 0x0F00) >> 8;
+			unsigned short val = (opCode & 0x00FF);
+			_v[v] += val;
+
 			_pc += 2;
 			break;
 		}
@@ -269,20 +286,21 @@ void Chip8::EmulateCycle()
 		// DXYN 	Disp 	draw(Vx,Vy,N) 	Draws a sprite at coordinate (VX, VY) that has a width of 8 pixels and a height of N pixels. Each row of 8 pixels is read as bit-coded starting from memory location I; I value doesn’t change after the execution of this instruction. As described above, VF is set to 1 if any screen pixels are flipped from set to unset when the sprite is drawn, and to 0 if that doesn’t happen 
 		case 0xD000:
 		{
-			unsigned short x = (opCode & 0x0F00) >> 8;
-			unsigned short y = (opCode & 0x00F0) >> 4;
-			unsigned short rows = (opCode & 0x000F);
+			unsigned short x = _v[(opCode & 0x0F00) >> 8];
+			unsigned short y = _v[(opCode & 0x00F0) >> 4];
+			unsigned short height = (opCode & 0x000F);
 
 			_v[0xF] = 0;	// clear the carry bit
 
-			for (int row = 0 ; row < rows ; ++row)
+			for (int pixelY = 0 ; pixelY < height ; ++pixelY)
 			{
-				unsigned short pixel = _memory[_i + row];
-				for (int col = 0 ; col < 8 ; ++col)
+				unsigned short pixel = _memory[_i + pixelY];
+				for (int pixelX = 0 ; pixelX < 8 ; ++pixelX)
 				{
-					if ((pixel & (0x80 >> col)) != 0)	// if the pixel bit is set
+					if ((pixel & (0x80 >> pixelX)) != 0)	// if the pixel bit is set
 					{
-						int index = x + col + (y + row) * ScreenHeight;
+						int index = x + pixelX + ((y + pixelY) * ScreenWidth);
+
 						// if the pixel is already set then set the carry flag
 						if (_gfx[index] != 0)
 						{
@@ -294,8 +312,6 @@ void Chip8::EmulateCycle()
 					}
 				}
 			}
-
-			// TODO = set the draw flag
 
 			_pc += 2;
 			_draw = true;
@@ -345,17 +361,14 @@ void Chip8::EmulateCycle()
 		{
 //			FX07 	Timer 	Vx = get_delay() 	Sets VX to the value of the delay timer.
 //FX0A 	KeyOp 	Vx = get_key() 	A key press is awaited, and then stored in VX. (Blocking Operation. All instruction halted until next key event)
-//FX15 	Timer 	delay_timer(Vx) 	Sets the delay timer to VX.
 //FX18 	Sound 	sound_timer(Vx) 	Sets the sound timer to VX.
 //FX1E 	MEM 	I +=Vx 	Adds VX to I. VF is set to 1 when there is a range overflow (I+VX>0xFFF), and to 0 when there isn't.[c]
-//FX29 	MEM 	I=sprite_addr[Vx] 	Sets I to the location of the sprite for the character in VX. Characters 0-F (in hexadecimal) are represented by a 4x5 font. 
 //FX55 	MEM 	reg_dump(Vx,&I) 	Stores V0 to VX (including VX) in memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified.[d]
-//FX65 	MEM 	reg_load(Vx,&I) 	Fills V0 to VX (including VX) with values from memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified.[d]
 
 			unsigned short x = (opCode & 0x0F00) >> 8;
 			switch (opCode & 0x00FF)
 			{
-				// // FX33 	BCD 	set_BCD(Vx); Stores the binary-coded decimal representation of VX, with the most significant of three digits at the address in I, the middle digit at I plus 1, and the least significant digit at I plus 2. (In other words, take the decimal representation of VX, place the hundreds digit in memory at location in I, the tens digit at location I+1, and the ones digit at location I+2.) 
+				// FX33 	BCD 	set_BCD(Vx); Stores the binary-coded decimal representation of VX, with the most significant of three digits at the address in I, the middle digit at I plus 1, and the least significant digit at I plus 2. (In other words, take the decimal representation of VX, place the hundreds digit in memory at location in I, the tens digit at location I+1, and the ones digit at location I+2.) 
 				case 0x0033:
 				{
 					_memory[_i] = _v[x] / 100;
@@ -365,12 +378,50 @@ void Chip8::EmulateCycle()
 					break;
 				}
 
+				// FX0A 	KeyOp 	Vx = get_key() 	A key press is awaited, and then stored in VX. (Blocking Operation. All instruction halted until next key event)
+				/*case 0x000A:
+				{
+
+					break;
+				}*/
+
+				// FX15 	Timer 	delay_timer(Vx) 	Sets the delay timer to VX
+				case 0x0015:
+				{
+					_delayTimer = _v[x];
+
+					break;
+				}
+
+				// FX29 	MEM 	I=sprite_addr[Vx] 	Sets I to the location of the sprite for the character in VX. Characters 0-F (in hexadecimal) are represented by a 4x5 font
+				case 0x0029:
+				{
+					_i = (x * 4 * 5);	// font is stored at 0
+					break;
+				}
+
+				// FX65 	MEM 	reg_load(Vx,&I) 	Fills V0 to VX (including VX) with values from memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified.
+				case 0x0065:
+				{
+					for (unsigned v = 0 ; v <= x ; ++v)
+					{
+						_v[v] = _memory[_i + v];
+					}
+
+					break;
+				}
+
+				default:
+				{
+					Info("Error: Unknown opCode %04x!", opCode);
+					break;
+				}
 			}
 			
 			_pc += 2;
 			break;
 		}
-
+			
 		default:
 		{
 			Info("Error: Unknown opCode %04x!", opCode);

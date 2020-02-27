@@ -53,7 +53,7 @@ public:
 
 	void Initialize();
 	bool LoadProgram(const char* filename);
-	void EmulateCycle();
+	void EmulateCycle(bool paused);
 
 	// meta accessors
 	unsigned short PC() const { return _pc; }
