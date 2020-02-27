@@ -16,8 +16,9 @@ using namespace logging;
 
 /*static */int Designer::DisplayHeight()
 {
-	return (Chip8::ScreenWidth * DisplayScale);
+	return (Chip8::ScreenHeight * DisplayScale);
 }
+
 Designer::Designer()
 	: Application(1280, 720)
 {
@@ -57,51 +58,46 @@ bool Designer::Initialize(LPCWSTR name)
 	assert(_gfxTexture == nullptr);
 
 	// allocate a buffer for the texture data
-	size_t bufferSize = (DisplayWidth() * DisplayHeight()) * 4;
+	size_t bufferSize = (DisplayWidth() * DisplayHeight() * 4);
 	_gfxTexture = new unsigned char[bufferSize];
 	if (_gfxTexture == nullptr)
 	{
 		Info("Error: could not allocate memory for the gfx texture");
 		return false;
 	}
-	memset(_gfxTexture, 0x00000000, bufferSize);
-	
+	memset(_gfxTexture, 0x00, bufferSize);
+
+	UploadGfxTexture();
+
 	return true;
 }
 
-bool Designer::DrawGfxTexture()
+bool Designer::UpdateGfxTexture()
 {
 	// clear the texture
 	size_t bufferSize = (DisplayWidth() * DisplayHeight()) * 4;
-	memset(_gfxTexture, 0x00000000, bufferSize);
+	memset(_gfxTexture, 0x00, bufferSize);
 
-	// TODO - draw
+	// draw any on pixels into the buffer
 	for (int y = 0 ; y < Chip8::ScreenHeight ; ++y)
 	{
 		for (int x = 0 ; x < Chip8::ScreenWidth ; ++x)
 		{
 			unsigned char pixel = _chip8->Pixel(x, y);
-
-			int startX = (DisplayScale * x);
-			int startY = (DisplayScale * y);
-			for (int y2 = startY ; y2 < (startY + (int)DisplayScale) ; ++y2)
+			if (pixel != 0)
 			{
-				for (int x2 = startX ; x2 < (startX + (int)DisplayScale) ; ++x2)
-				{
-					int pixelIdx = (y2 * DisplayWidth()) + x2;
-					if (pixel == 0)
-					{
-						_gfxTexture[pixelIdx] = 0x00;
-					}
-					else
-					{
-						_gfxTexture[pixelIdx] = 0xFF;
-					}
-				}
+				DrawPixel(x, y, true);
 			}
 		}
 	}
 
+	UploadGfxTexture();
+
+	return true;
+}
+
+void Designer::UploadGfxTexture()
+{
 	// TODO - release the old texture
 
 	// build the texture
@@ -118,8 +114,23 @@ bool Designer::DrawGfxTexture()
 	// TODO - allow this to be regenerated
     glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, DisplayWidth(), DisplayHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, _gfxTexture);
-	
-	return true;
+}
+
+void Designer::DrawPixel(int x, int y, bool filled)
+{
+	int startX = (DisplayScale * x);
+	int startY = (DisplayScale * y);
+	for (int pixelY = startY ; pixelY < (startY + DisplayScale) ; ++pixelY)
+	{
+		for (int pixelX = startX ; pixelX < (startX + DisplayScale) ; ++pixelX)
+		{
+			int pixelIdx = ((pixelY * DisplayWidth()) * 4) + (pixelX * 4);
+			_gfxTexture[pixelIdx] = 0xFF;
+			_gfxTexture[pixelIdx + 1] = 0xFF;
+			_gfxTexture[pixelIdx + 2] = 0xFF;
+			_gfxTexture[pixelIdx + 3] = 0xFF;
+		}
+	}
 }
 
 bool Designer::RunFrame()
@@ -137,7 +148,7 @@ bool Designer::RunFrame()
 
 	if (_chip8->Draw())
 	{
-		if (!DrawGfxTexture())
+		if (!UpdateGfxTexture())
 		{
 			MessageBox(_hWnd, L"Failed to update the gfx texture", L"Error", MB_OK);
 			// not fatal so do no bail

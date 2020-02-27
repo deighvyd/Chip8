@@ -24,7 +24,10 @@ protected:
 	virtual bool RunFrame() override;
 
 private:
-	bool DrawGfxTexture();
+	bool UpdateGfxTexture();
+	void UploadGfxTexture();
+
+	void DrawPixel(int x, int y, bool filled);
 
 private:
 	static int DisplayWidth();
