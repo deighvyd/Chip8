@@ -120,9 +120,9 @@ void Designer::DrawPixel(int x, int y, bool filled)
 {
 	int startX = (DisplayScale * x);
 	int startY = (DisplayScale * y);
-	for (int pixelY = startY ; pixelY < (startY + DisplayScale) ; ++pixelY)
+	for (int pixelY = startY ; pixelY < (startY + (int)DisplayScale) ; ++pixelY)
 	{
-		for (int pixelX = startX ; pixelX < (startX + DisplayScale) ; ++pixelX)
+		for (int pixelX = startX ; pixelX < (startX + (int)DisplayScale) ; ++pixelX)
 		{
 			int pixelIdx = ((pixelY * DisplayWidth()) * 4) + (pixelX * 4);
 			_gfxTexture[pixelIdx] = 0xFF;
