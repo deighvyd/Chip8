@@ -91,11 +91,11 @@ bool Designer::DrawGfxTexture()
 					int pixelIdx = (y2 * DisplayWidth()) + x2;
 					if (pixel == 0)
 					{
-						_gfxTexture[pixelIdx] = 0x00000000;
+						_gfxTexture[pixelIdx] = 0x00;
 					}
 					else
 					{
-						_gfxTexture[pixelIdx] = 0xFFFFFFFF;
+						_gfxTexture[pixelIdx] = 0xFF;
 					}
 				}
 			}
