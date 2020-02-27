@@ -64,13 +64,7 @@ bool Designer::Initialize(LPCWSTR name)
 		Info("Error: could not allocate memory for the gfx texture");
 		return false;
 	}
-	//memset(_gfxTexture, 0x00000000, bufferSize);
-
-	// draw a grid
-	/*for (int x = 0 ; x < Chip8::ScreenWidth ; ++x)
-	{
-		for (screenHight
-	}*/
+	memset(_gfxTexture, 0x00000000, bufferSize);
 	
 	return true;
 }
@@ -97,11 +91,11 @@ bool Designer::DrawGfxTexture()
 					int pixelIdx = (y2 * DisplayWidth()) + x2;
 					if (pixel == 0)
 					{
-						_gfxTexture[pixelIdx] = 0x00;
+						_gfxTexture[pixelIdx] = 0x00000000;
 					}
 					else
 					{
-						_gfxTexture[pixelIdx] = 0xFF;
+						_gfxTexture[pixelIdx] = 0xFFFFFFFF;
 					}
 				}
 			}
