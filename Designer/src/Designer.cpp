@@ -64,8 +64,14 @@ bool Designer::Initialize(LPCWSTR name)
 		Info("Error: could not allocate memory for the gfx texture");
 		return false;
 	}
-	memset(_gfxTexture, 0x00000000, bufferSize);
+	//memset(_gfxTexture, 0x00000000, bufferSize);
 
+	// draw a grid
+	/*for (int x = 0 ; x < Chip8::ScreenWidth ; ++x)
+	{
+		for (screenHight
+	}*/
+	
 	return true;
 }
 
@@ -84,18 +90,18 @@ bool Designer::DrawGfxTexture()
 
 			int startX = (DisplayScale * x);
 			int startY = (DisplayScale * y);
-			for (int y2 = startY ; y2 < (startY + DisplayScale) ; ++y2)
+			for (int y2 = startY ; y2 < (startY + (int)DisplayScale) ; ++y2)
 			{
-				for (int x2 = startX ; x2 < (startX + DisplayScale) ; ++x2)
+				for (int x2 = startX ; x2 < (startX + (int)DisplayScale) ; ++x2)
 				{
-					int pixelIdx = (y2 * DisplayHeight()) + x2;
+					int pixelIdx = (y2 * DisplayWidth()) + x2;
 					if (pixel == 0)
 					{
-						_gfxTexture[pixelIdx] = 0x00000000;
+						_gfxTexture[pixelIdx] = 0x00;
 					}
 					else
 					{
-						_gfxTexture[pixelIdx] = 0xFFFFFFFF;
+						_gfxTexture[pixelIdx] = 0xFF;
 					}
 				}
 			}
@@ -129,13 +135,10 @@ bool Designer::RunFrame()
 		return false;
 	}
 
-	if (!_paused || _step > 0)
+	_chip8->EmulateCycle(_paused && _step == 0);
+	if (_step > 0)
 	{
-		_chip8->EmulateCycle();
-		if (_step > 0)
-		{
-			--_step;
-		}
+		--_step;
 	}
 
 	if (_chip8->Draw())
@@ -167,6 +170,11 @@ void Designer::OnGui()
 				++_step;
 			}
 		}
+		ImGui::SameLine();
+		if (ImGui::Button("Reset"))
+		{
+			_chip8->Initialize();
+		}
 
 		assert((_programSize % 2) == 0);
 		ImGui::BeginChild("instructions");
@@ -184,6 +192,7 @@ void Designer::OnGui()
 
 			if (active)
 			{
+				ImGui::SetScrollHere();
 				ImGui::PopStyleColor(1);
 			}
 		}
@@ -236,6 +245,22 @@ void Designer::OnGui()
 		}
 		ImGui::Columns(1);
 		
+		ImGui::End();
+	}
+
+	if (ImGui::Begin("Gfx"))
+	{
+		for (unsigned int y = 0 ; y < Chip8::ScreenHeight ; ++y)
+		{
+			char line[Chip8::ScreenWidth + 1];
+			for (unsigned int x = 0 ; x < Chip8::ScreenWidth ; ++x)
+			{
+				line[x] = _chip8->Pixel(x, y) == 0 ? '0' : '1';
+			}
+			line[Chip8::ScreenWidth] = '\0';
+			ImGui::Text("%s", line);
+		}
+
 		ImGui::End();
 	}
 
