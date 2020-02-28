@@ -302,11 +302,16 @@ void Designer::OnGui()
 			}
 		}
 
-		ImGui::End();	}
+		ImGui::End();	
+	}
 
-	if (ImGui::Begin("Emulator"))
+	ImVec2 gfxSize = ImVec2(Chip8::ScreenWidth * DisplayScale, Chip8::ScreenHeight * DisplayScale);
+
+	ImGui::SetNextWindowSize(ImVec2(0, 0));
+	if (ImGui::Begin("Emulator", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar))
 	{
-		ImGui::Image(_gfxTextureId, { Chip8::ScreenWidth * DisplayScale, Chip8::ScreenHeight * DisplayScale});
+		
+		ImGui::Image(_gfxTextureId, gfxSize, ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 1), ImVec4(255,255,255,255));
 		ImGui::End();
 	}
 }
