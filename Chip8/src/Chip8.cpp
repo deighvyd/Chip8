@@ -73,6 +73,28 @@ unsigned char Chip8::Pixel(int x, int y) const
 	return _gfx[x + (ScreenWidth * y)];
 }
 
+void Chip8::KeyDown(unsigned int key)
+{
+	if (key >= NumKeys)
+	{
+		Info("Error: unknown key %u", key);
+		return;
+	}
+
+	_keys[key] = true;
+}
+
+void Chip8::KeyUp(unsigned int key)
+{
+	if (key >= NumKeys)
+	{
+		Info("Error: unknown key %u", key);
+		return;
+	}
+
+	_keys[key] = false;
+}
+
 bool Chip8::LoadProgram(const char* filename) 
 {
 	size_t size = ReadProgram(filename, &(_memory[ProgramStart]), TotalMemoryBytes - ProgramStart);
@@ -429,5 +451,17 @@ void Chip8::EmulateCycle(bool paused)
 		}
 	}
 
-	// TODO - update timers.
+	if (_delayTimer > 0)
+	{
+		--_delayTimer;
+	}
+ 
+	if (_soundTimer > 0)
+	{
+		if(_soundTimer == 1)
+		{
+			Info("BEEP!\n");
+		}
+		--_soundTimer;
+	}  
 }

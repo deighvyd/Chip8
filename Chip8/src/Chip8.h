@@ -63,6 +63,9 @@ public:
 	bool Draw() const { return _draw; }
 	unsigned char Pixel(int x, int y) const;
 
+	void KeyDown(unsigned int key);
+	void KeyUp(unsigned int key);
+
 public:
 	static size_t ReadProgram(const char* filename, unsigned char* buffer, size_t bufferSize);
 
