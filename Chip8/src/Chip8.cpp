@@ -381,7 +381,7 @@ void Chip8::EmulateCycle(bool paused)
 
 		case 0xF000:
 		{
-//			FX07 	Timer 	Vx = get_delay() 	Sets VX to the value of the delay timer.
+
 //FX0A 	KeyOp 	Vx = get_key() 	A key press is awaited, and then stored in VX. (Blocking Operation. All instruction halted until next key event)
 //FX18 	Sound 	sound_timer(Vx) 	Sets the sound timer to VX.
 //FX1E 	MEM 	I +=Vx 	Adds VX to I. VF is set to 1 when there is a range overflow (I+VX>0xFFF), and to 0 when there isn't.[c]
@@ -390,6 +390,13 @@ void Chip8::EmulateCycle(bool paused)
 			unsigned short x = (opCode & 0x0F00) >> 8;
 			switch (opCode & 0x00FF)
 			{
+				// FX07 	Timer 	Vx = get_delay() 	Sets VX to the value of the delay timer.
+				case 0x0007:
+				{
+					_v[x] = _delayTimer;
+					break;
+				}
+
 				// FX33 	BCD 	set_BCD(Vx); Stores the binary-coded decimal representation of VX, with the most significant of three digits at the address in I, the middle digit at I plus 1, and the least significant digit at I plus 2. (In other words, take the decimal representation of VX, place the hundreds digit in memory at location in I, the tens digit at location I+1, and the ones digit at location I+2.) 
 				case 0x0033:
 				{
