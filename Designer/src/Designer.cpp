@@ -269,6 +269,41 @@ void Designer::OnGui()
 		ImGui::End();
 	}
 
+	if (ImGui::Begin("Keypad"))
+	{
+		unsigned int numCols = Chip8::NumKeys / 4;
+		unsigned int numRows = Chip8::NumKeys / numCols;
+
+		for (unsigned int row = 0 ; row < numRows ; ++row)
+		{
+			for (unsigned int col = 0 ; col < numCols ; ++col)
+			{
+				unsigned int key = ((row * numCols) + col);
+
+				char buffer[2];
+				sprintf_s(buffer, "%X", key);
+				
+				bool released = ImGui::Button(buffer, { 32, 32 });
+				if (released)
+				{
+					//Info("KeyUp   %X", key);
+					_chip8->KeyUp(key);
+				}
+				else if (ImGui::IsItemClicked(0))
+				{
+					//Info("KeyDown %X", key);
+					_chip8->KeyDown(key);
+				}
+				
+				if (col < (numCols - 1))
+				{
+					ImGui::SameLine();
+				}
+			}
+		}
+
+		ImGui::End();	}
+
 	if (ImGui::Begin("Emulator"))
 	{
 		ImGui::Image(_gfxTextureId, { Chip8::ScreenWidth * DisplayScale, Chip8::ScreenHeight * DisplayScale});
