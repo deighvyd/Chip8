@@ -192,6 +192,20 @@ void Chip8::EmulateCycle(bool paused)
 			break;
 		}
 
+		// 3XNN 	Cond 	if(Vx==NN) 	Skips the next instruction if VX equals NN. (Usually the next instruction is a jump to skip a code block) 
+		case 0x3000:
+		{
+			unsigned short x = (opCode & 0x0F00) >> 8;
+			if (_v[x] == (opCode & 0x00FF))
+			{
+				_pc += 4;
+			}
+			else
+			{
+				_pc += 2;
+			}
+		}
+
 		// 6XNN 	Const 	Vx = NN 	Sets VX to NN
 		case 0x6000:
 		{
