@@ -220,6 +220,7 @@ LRESULT CALLBACK Application::MessageHandler(HWND hWnd, UINT uMsg, WPARAM wParam
 		case WM_KEYDOWN:
 		case WM_SYSKEYDOWN:
 		{
+			OnKeyDown(wParam);
 			_input->KeyDown((unsigned int)wParam);
 			return 0;
 		}
@@ -227,6 +228,7 @@ LRESULT CALLBACK Application::MessageHandler(HWND hWnd, UINT uMsg, WPARAM wParam
 		case WM_KEYUP:
 		case WM_SYSKEYUP:
 		{
+			OnKeyUp(wParam);
 			_input->KeyUp((unsigned int)wParam);
 			return 0;
 		}
