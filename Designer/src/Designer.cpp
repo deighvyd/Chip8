@@ -184,6 +184,22 @@ void Designer::OnDraw()
 
 void Designer::OnGui()
 {
+	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowSize(ImVec2(static_cast<int>(_width), static_cast<int>(_height)));
+	
+	int windowFlags = 0;
+	windowFlags |= ImGuiWindowFlags_NoMove;
+	windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus;
+	windowFlags |= ImGuiWindowFlags_NoDecoration;
+	windowFlags |= ImGuiWindowFlags_NoBackground;
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+
+	ImGui::Begin("##background", nullptr, windowFlags);
+	ImGui::End();
+
+	//ImGui::PopStyleVar(1);
+
 	if (ImGui::Begin("System"))
 	{
 		ImGui::Text("Program: %s", _programFile);
