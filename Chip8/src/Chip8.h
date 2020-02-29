@@ -63,6 +63,9 @@ public:
 	bool Draw() const { return _draw; }
 	unsigned char Pixel(int x, int y) const;
 
+	unsigned char DelayTimer() const { return _delayTimer; }
+	unsigned char SoundTimer() const { return _soundTimer; }
+
 	void KeyDown(unsigned int key);
 	void KeyUp(unsigned int key);
 
