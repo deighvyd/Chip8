@@ -38,8 +38,6 @@ namespace detail
 
     static bool ShowDemoWindow = false;
 
-    static double Time = 0.0;
-
     static GLuint FontTexture = 0;
 
     static GLuint VboHandle = 0;
@@ -123,9 +121,6 @@ bool Gui::Initialize(OpenGL* openGL, HWND hWnd, Input* input)
     ImGuiIO& io = ImGui::GetIO();
 
     ImGui::StyleColorsDark();
-
-    //g_Window = window;
-    detail::Time = 0.0;
 
     // setup back-end capabilities flags
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;         // We can honor GetMouseCursor() values (optional)
@@ -385,11 +380,6 @@ void Gui::NewFrame(HWND hWnd, Input *input)
     {
         io.DisplayFramebufferScale = ImVec2((float)displayWidth / width, (float)displayHeight / height);
     }
-
-    // Setup time step
-    /*double current_time = glfwGetTime();
-    io.DeltaTime = g_Time > 0.0 ? (float)(current_time - g_Time) : (float)(1.0f/60.0f);
-    g_Time = current_time;*/
 
     // update the mouse buttons
     for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++)

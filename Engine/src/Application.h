@@ -16,18 +16,17 @@ public:
 
 	bool HasFocus() const { return _hasFocus; }
 
-	virtual void OnUpdate() = 0;
-	virtual void OnDraw() = 0;
-	virtual void OnGui() = 0;
+	virtual void OnUpdate(float delta) {}
+	virtual void OnDraw() {}
+	virtual void OnGui() {}
 
 	LRESULT CALLBACK MessageHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-protected:
-	virtual bool RunFrame();
 
 private:
 	bool InitializeWindows(OpenGL* openGL, int& screenWidth, int& screenHeight);
 	void ShutdownWindows();
+
+	bool RunFrame();
 
 protected:
 	Application(int width, int height);
@@ -44,6 +43,8 @@ protected:
 	int _height;
 
 	bool _hasFocus;
+
+	int _time = 0;
 
 	OpenGL* _openGL;
 	Input* _input;

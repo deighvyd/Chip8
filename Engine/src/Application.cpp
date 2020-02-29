@@ -170,6 +170,13 @@ bool Application::RunFrame()
 		return false;
 	}
 
+	int currTime = timeGetTime();
+    float deltaTime = _time > 0 ? (static_cast<float>(currTime - _time) * 0.001f) : (1.0f / 60.0f);;
+    _time = currTime;
+
+	OnUpdate(deltaTime);
+	OnDraw();
+
 	bool result = _graphics->RunFrame(_hWnd, _input);
 	if (!result)
 	{
