@@ -20,6 +20,9 @@ public:
 	virtual void OnDraw() override;
 	virtual void OnGui() override;
 
+	virtual void OnKeyDown(unsigned char key) override;
+	virtual void OnKeyUp(unsigned char key) override;
+
 private:
 	bool UpdateGfxTexture();
 	void UploadGfxTexture();
