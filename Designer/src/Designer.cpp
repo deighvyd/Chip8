@@ -179,6 +179,7 @@ void Designer::OnGui()
 		if (ImGui::Button("Reset"))
 		{
 			_chip8->Initialize();
+			_chip8->LoadProgram(_programFile);
 		}
 
 		assert((_programSize % 2) == 0);
@@ -193,7 +194,7 @@ void Designer::OnGui()
 			}
 
 			unsigned short opCode = (_program[pc] << 8 | _program[pc + 1]);
-			ImGui::Text("%04d:\t0x%04X", (pc / 2) + 1, opCode);
+			ImGui::Text("%04d (0x%04X):\t0x%04X", (pc / 2) + 1, Chip8::ProgramStart + pc, opCode);
 
 			if (active)
 			{
@@ -203,14 +204,17 @@ void Designer::OnGui()
 		}
 
 		ImGui::EndChild();
-		ImGui::End();
 	}
+	ImGui::End();
 
 	if (ImGui::Begin("Registers"))
 	{
 		// TODO - binary view?
-		ImGui::Text("I:\t0x%02X", _chip8->I());
+		ImGui::Text("I:\t\t0x%02X", _chip8->I());
+		ImGui::Text("Delay:\t0x%2X", _chip8->DelayTimer());
+		ImGui::Text("Sound:\t0x%2X", _chip8->SoundTimer());
 
+		ImGui::Separator();
 		ImGui::Columns(4, 0, false);
 		for (unsigned int reg = 0 ; reg < Chip8::NumRegisers ; ++reg)
 		{
@@ -218,9 +222,8 @@ void Designer::OnGui()
 			ImGui::NextColumn();
 		}
 		ImGui::Columns(1);
-		
-		ImGui::End();
 	}
+	ImGui::End();
 
 	if (ImGui::Begin("Memory"))
 	{
@@ -249,9 +252,8 @@ void Designer::OnGui()
 			}
 		}
 		ImGui::Columns(1);
-		
-		ImGui::End();
 	}
+	ImGui::End();
 
 	if (ImGui::Begin("Gfx"))
 	{
@@ -265,9 +267,8 @@ void Designer::OnGui()
 			line[Chip8::ScreenWidth] = '\0';
 			ImGui::Text("%s", line);
 		}
-
-		ImGui::End();
 	}
+	ImGui::End();
 
 	if (ImGui::Begin("Keypad"))
 	{
@@ -301,14 +302,13 @@ void Designer::OnGui()
 				}
 			}
 		}
-
-		ImGui::End();	
 	}
+	ImGui::End();
 
 	ImVec2 gfxSize = ImVec2(Chip8::ScreenWidth * DisplayScale, Chip8::ScreenHeight * DisplayScale);
 
 	ImGui::SetNextWindowSize(ImVec2(0, 0));
-	if (ImGui::Begin("Emulator", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar))
+	if (ImGui::Begin("Emulator", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse))
 	{
 		
 		ImGui::Image(_gfxTextureId, gfxSize, ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 1), ImVec4(255,255,255,255));
