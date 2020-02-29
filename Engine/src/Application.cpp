@@ -7,6 +7,8 @@
 #include "Log.h"
 #include "OpenGL.h"
 
+using namespace logging;
+
 namespace detail
 {
 	static Application* Instance = nullptr;
@@ -172,7 +174,17 @@ bool Application::RunFrame()
 
 	// TODO - can be more accurate that this
 	int currTime = timeGetTime();
-    float deltaTime = _time > 0 ? (static_cast<float>(currTime - _time) * 0.001f) : (1.0f / 60.0f);;
+
+	if (currTime == _time)
+	{
+		Info("Error: timer resolution failure");
+	}
+
+    float deltaTime = 1.f / 60.f;
+	if (_time > 0 && currTime > _time)
+	{
+		deltaTime = static_cast<float>(currTime - _time) * 0.001f;
+	}
     _time = currTime;
 
 	OnUpdate(deltaTime);
