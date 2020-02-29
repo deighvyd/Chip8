@@ -13,7 +13,7 @@ public:
     Emulator& operator=(Emulator const&) = delete;
 	virtual ~Emulator();
 
-	virtual void OnUpdate() override {}
+	virtual void OnUpdate(float delta) override {}
 	virtual void OnDraw() override {}
 	virtual void OnGui() override {}
 
