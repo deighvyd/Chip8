@@ -40,6 +40,11 @@ void Chip8::Initialize()
 	memcpy(_memory, Font, NumFontChars);
 
 	_draw = false;
+
+	// TODO - this is not a great place for this
+	// TODO - make a better rand generator
+	time_t t;
+	srand((unsigned) time(&t));
 }
 
 unsigned char Chip8::Register(unsigned int reg) const
@@ -152,7 +157,7 @@ void Chip8::EmulateCycle(bool paused)
 	unsigned short opCode = (_memory[_pc] << 8 | _memory[_pc + 1]);
 
 	// execute the instruction
-	Info("processing opCode %04x...", opCode);
+	//Info("processing opCode %04x...", opCode);
 	switch (opCode & 0xF000)
 	{
 		case 0x0000:
@@ -160,10 +165,12 @@ void Chip8::EmulateCycle(bool paused)
 			switch(opCode & 0x00FF)
 			{
 				// 00E0 	Display 	disp_clear() 	Clears the screen
-				/*case 0x00E0:
+				case 0x00E0:
 				{
+					memset(_gfx, 0, ScreenWidth * ScreenHeight);
+					_pc += 2;
 					break;
-				}*/
+				}
  
 				// 00EE 	Flow 	return; 	Returns from a subroutine 
 				case 0x00EE: 
@@ -205,13 +212,10 @@ void Chip8::EmulateCycle(bool paused)
 			unsigned short x = (opCode & 0x0F00) >> 8;
 			if (_v[x] == (opCode & 0x00FF))
 			{
-				_pc += 4;
-			}
-			else
-			{
 				_pc += 2;
 			}
-
+			
+			_pc += 2;
 			break;
 		}
 
@@ -221,13 +225,10 @@ void Chip8::EmulateCycle(bool paused)
 			unsigned short x = (opCode & 0x0F00) >> 8;
 			if (_v[x] != (opCode & 0x00FF))
 			{
-				_pc += 4;
-			}
-			else
-			{
 				_pc += 2;
 			}
-
+			
+			_pc += 2;
 			break;
 		}
 
@@ -239,13 +240,10 @@ void Chip8::EmulateCycle(bool paused)
 
 			if (_v[x] != _v[y])
 			{
-				_pc += 4;
-			}
-			else
-			{
 				_pc += 2;
 			}
-
+			
+			_pc += 2;
 			break;
 		}
 
@@ -290,6 +288,7 @@ void Chip8::EmulateCycle(bool paused)
 				case 0x0000:
 				{
 					_v[x] = _v[y];
+					_pc += 2;
 					break;
 				}
 
@@ -297,6 +296,7 @@ void Chip8::EmulateCycle(bool paused)
 				case 0x0001:
 				{
 					_v[x] = _v[x] | _v[y];
+					_pc += 2;
 					break;
 				}
 
@@ -304,6 +304,7 @@ void Chip8::EmulateCycle(bool paused)
 				case 0x0002:
 				{
 					_v[x] = _v[x] & _v[y];
+					_pc += 2;
 					break;
 				}
 
@@ -311,6 +312,7 @@ void Chip8::EmulateCycle(bool paused)
 				case 0x0003:
 				{
 					_v[x] = _v[x] ^ _v[y];
+					_pc += 2;
 					break;
 				}
 
@@ -319,6 +321,7 @@ void Chip8::EmulateCycle(bool paused)
 				{
 					_v[0xF] = (_v[y] > (0xFF - _v[x])) ? 1 : 0;
 					_v[x] += _v[y];
+					_pc += 2;
 					break;
 				}
 
@@ -350,7 +353,6 @@ void Chip8::EmulateCycle(bool paused)
 				}
 			}
 
-			_pc += 2;
 			break;
 		}
 
@@ -358,6 +360,24 @@ void Chip8::EmulateCycle(bool paused)
 		case 0xA000:
 		{
 			_i = opCode & 0x0FFF;
+			_pc += 2;
+			break;
+		}
+
+		// CXNN 	Rand 	Vx=rand()&NN 	Sets VX to the result of a bitwise and operation on a random number (Typically: 0 to 255) and NN. 
+		case 0xC000:
+		{
+			unsigned short x = (opCode & 0x0F00) >> 8;
+			unsigned short r = static_cast<unsigned short>(rand() % (255 - 1)); 
+
+			if (r < 0 || r > 255)
+			{
+				Info("Error: rand value out of range %u", rand);
+				r = r < 0 ? 0 : r;
+				r = r > 255 ? 255 : r;
+			}
+
+			_v[x] = (opCode & 0x0FFF) & r;
 			_pc += 2;
 			break;
 		}
@@ -451,6 +471,7 @@ void Chip8::EmulateCycle(bool paused)
 				case 0x0007:
 				{
 					_v[x] = _delayTimer;
+					_pc += 2;
 					break;
 				}
 
@@ -461,6 +482,7 @@ void Chip8::EmulateCycle(bool paused)
 					_memory[_i + 1] = (_v[x] / 10) % 10;
 					_memory[_i + 2] = (_v[x] % 100) % 10;
 
+					_pc += 2;
 					break;
 				}
 
@@ -475,7 +497,8 @@ void Chip8::EmulateCycle(bool paused)
 				case 0x0015:
 				{
 					_delayTimer = _v[x];
-
+					
+					_pc += 2;
 					break;
 				}
 
@@ -483,6 +506,7 @@ void Chip8::EmulateCycle(bool paused)
 				case 0x0029:
 				{
 					_i = (x * 4 * 5);	// font is stored at 0
+					_pc += 2;
 					break;
 				}
 
@@ -494,6 +518,7 @@ void Chip8::EmulateCycle(bool paused)
 						_v[v] = _memory[_i + v];
 					}
 
+					_pc += 2;
 					break;
 				}
 
@@ -503,8 +528,7 @@ void Chip8::EmulateCycle(bool paused)
 					break;
 				}
 			}
-			
-			_pc += 2;
+
 			break;
 		}
 			
