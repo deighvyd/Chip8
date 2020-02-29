@@ -182,6 +182,20 @@ void Designer::OnGui()
 			_chip8->LoadProgram(_programFile);
 		}
 
+		if (ImGui::CollapsingHeader("Stack", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			ImGui::Indent();
+
+			int count = 0;
+			for (unsigned short sp = _chip8->StackPointer() ; sp > 0 ; --sp, ++count)
+			{
+				ImGui::Text("%u:\t0x%04X", count + 1, _chip8->Stack()[sp - 1]);
+
+			}
+
+			ImGui::Unindent();
+		}
+
 		assert((_programSize % 2) == 0);
 		ImGui::BeginChild("instructions");
 
