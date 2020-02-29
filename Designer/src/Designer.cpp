@@ -198,7 +198,7 @@ void Designer::OnGui()
 	ImGui::Begin("##background", nullptr, windowFlags);
 	ImGui::End();
 
-	//ImGui::PopStyleVar(1);
+	ImGui::PopStyleVar(1);
 
 	if (ImGui::Begin("System"))
 	{
