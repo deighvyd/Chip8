@@ -185,7 +185,7 @@ void Designer::OnDraw()
 void Designer::OnGui()
 {
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
-	ImGui::SetNextWindowSize(ImVec2(static_cast<int>(_width), static_cast<int>(_height)));
+	ImGui::SetNextWindowSize(ImVec2(static_cast<float>(_width), static_cast<float>(_height)));
 	
 	int windowFlags = 0;
 	windowFlags |= ImGuiWindowFlags_NoMove;
