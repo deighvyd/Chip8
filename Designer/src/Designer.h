@@ -16,12 +16,9 @@ public:
 
 	virtual bool Initialize(LPCWSTR name) override;
 
-	virtual void OnUpdate() override {}
-	virtual void OnDraw() override {}
+	virtual void OnUpdate(float delta) override;
+	virtual void OnDraw() override;
 	virtual void OnGui() override;
-
-protected:
-	virtual bool RunFrame() override;
 
 private:
 	bool UpdateGfxTexture();

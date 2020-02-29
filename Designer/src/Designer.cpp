@@ -9,6 +9,12 @@
 
 using namespace logging;
 
+namespace detail
+{
+	static const int ClokSpeed = 500;	// Hz
+	static const int ClockScale = 1;
+}
+
 /*static */int Designer::DisplayWidth()
 {
 	return (Chip8::ScreenWidth * DisplayScale);
@@ -133,18 +139,35 @@ void Designer::DrawPixel(int x, int y, bool filled)
 	}
 }
 
-bool Designer::RunFrame()
+void Designer::OnUpdate(float delta)
 {
-	if (!Application::RunFrame())
+	Application::OnUpdate(delta);
+	
+	if (_paused)
 	{
-		return false;
+		// emulate a single cycle if we step while paused
+		if (_step > 0)
+		{
+			_chip8->EmulateCycle();
+			--_step;
+		}
 	}
+	else 
+	{
+		// emulate N cycles
+		int clockSpeed = (detail::ClokSpeed * detail::ClockScale);
+		int numCycles = static_cast<int>(delta * static_cast<float>(clockSpeed));
+		while (numCycles > 0)
+		{
+			_chip8->EmulateCycle();
+			--numCycles;
+		}
+	}
+}
 
-	_chip8->EmulateCycle(_paused && _step == 0);
-	if (_step > 0)
-	{
-		--_step;
-	}
+void Designer::OnDraw()
+{
+	Application::OnDraw();
 
 	if (_chip8->Draw())
 	{
@@ -153,13 +176,19 @@ bool Designer::RunFrame()
 			MessageBox(_hWnd, L"Failed to update the gfx texture", L"Error", MB_OK);
 			// not fatal so do no bail
 		}
+		_chip8->ClearDraw();
 	}
-
-	return true;
 }
 
 void Designer::OnGui()
 {
+	if (ImGui::Begin("Info"))
+	{
+		ImGui::Text("Program: %s", _programFile);
+		ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+	}
+	ImGui::End();
+
 	if (ImGui::Begin("Program"))
 	{
 		if (ImGui::Button(_paused ? "Play" : "Pause"))
