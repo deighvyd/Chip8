@@ -155,15 +155,8 @@ size_t Chip8::ReadProgram(const char* filename, unsigned char* buffer, size_t bu
 	return read;
 }
 
-void Chip8::EmulateCycle(bool paused)
+void Chip8::EmulateCycle()
 {
-	_draw = false;
-
-	if (paused)
-	{
-		return;
-	}
-
 	// fetch and execute the next op code
 	unsigned short opCode = (_memory[_pc] << 8 | _memory[_pc + 1]);
 

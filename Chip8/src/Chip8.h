@@ -54,7 +54,7 @@ public:
 
 	void Initialize();
 	bool LoadProgram(const char* filename);
-	void EmulateCycle(bool paused);
+	void EmulateCycle();
 
 	// meta accessors
 	unsigned short PC() const { return _pc; }
@@ -73,6 +73,8 @@ public:
 	bool Key(unsigned int key) const;
 	void KeyDown(unsigned int key);
 	void KeyUp(unsigned int key);
+
+	void ClearDraw() { _draw = false; }
 
 public:
 	static size_t ReadProgram(const char* filename, unsigned char* buffer, size_t bufferSize);
