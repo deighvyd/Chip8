@@ -179,6 +179,7 @@ void Chip8::EmulateCycle(bool paused)
 				case 0x00E0:
 				{
 					memset(_gfx, 0, ScreenWidth * ScreenHeight);
+					_draw = true;
 					_pc += 2;
 					break;
 				}
