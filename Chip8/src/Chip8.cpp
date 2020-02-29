@@ -184,6 +184,13 @@ void Chip8::EmulateCycle(bool paused)
 			break;
 		}
 
+		// 1NNN 	Flow 	goto NNN; 	Jumps to address NNN. 
+		case 0x1000:
+		{
+			_pc = opCode & 0x0FFF;
+			break;
+		}
+
 		// 2NNN 	Flow 	*(0xNNN)() 	Calls subroutine at NNN
 		case 0x2000:
 		{
@@ -204,6 +211,42 @@ void Chip8::EmulateCycle(bool paused)
 			{
 				_pc += 2;
 			}
+
+			break;
+		}
+
+		// 4XNN 	Cond 	if(Vx!=NN) 	Skips the next instruction if VX doesn't equal NN. (Usually the next instruction is a jump to skip a code block) 
+		case 0x4000:
+		{
+			unsigned short x = (opCode & 0x0F00) >> 8;
+			if (_v[x] != (opCode & 0x00FF))
+			{
+				_pc += 4;
+			}
+			else
+			{
+				_pc += 2;
+			}
+
+			break;
+		}
+
+		// 5XY0 	Cond 	if(Vx==Vy) 	Skips the next instruction if VX equals VY. (Usually the next instruction is a jump to skip a code block) 
+		case 0x5000:
+		{
+			unsigned short x = (opCode & 0x0F00) >> 8;
+			unsigned short y = (opCode & 0x00F0) >> 4;
+
+			if (_v[x] != _v[y])
+			{
+				_pc += 4;
+			}
+			else
+			{
+				_pc += 2;
+			}
+
+			break;
 		}
 
 		// 6XNN 	Const 	Vx = NN 	Sets VX to NN
