@@ -228,7 +228,6 @@ void Designer::OnGui()
 	if (ImGui::Begin("Memory"))
 	{
 		// TODO - binary view?
-
 		static constexpr int BytesPerRow = 16;
 		
 		unsigned int numColumns = (BytesPerRow / 4);
@@ -272,6 +271,14 @@ void Designer::OnGui()
 
 	if (ImGui::Begin("Keypad"))
 	{
+		static constexpr unsigned char KeyLayout[Chip8::NumKeys] = 
+		{
+			0x1, 0x2, 0x3, 0xC,
+			0x4, 0x5, 0x6, 0xD,
+			0x7, 0x8, 0x9, 0xE,
+			0xA, 0x0, 0xB, 0xF,
+		};
+
 		static bool KeyDebug = false;
 		ImGui::Checkbox("Debug", &KeyDebug);
 
@@ -282,7 +289,7 @@ void Designer::OnGui()
 		{
 			for (unsigned int col = 0 ; col < numCols ; ++col)
 			{
-				unsigned int key = ((row * numCols) + col);
+				unsigned int key = KeyLayout[((row * numCols) + col)];
 
 				char buffer[2];
 				sprintf_s(buffer, "%X", key);
