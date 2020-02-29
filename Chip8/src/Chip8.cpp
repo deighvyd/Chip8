@@ -37,7 +37,7 @@ void Chip8::Initialize()
 	memset(_keys, 0, NumKeys);
 
 	// Load fontset
-	memcpy(_memory, Font, NumFontChars);
+	memcpy(_memory + FontStart, Font, NumFontChars);
 
 	_draw = false;
 
@@ -508,7 +508,7 @@ void Chip8::EmulateCycle(bool paused)
 				// FX29 	MEM 	I=sprite_addr[Vx] 	Sets I to the location of the sprite for the character in VX. Characters 0-F (in hexadecimal) are represented by a 4x5 font
 				case 0x0029:
 				{
-					_i = (x * 4 * 5);	// font is stored at 0
+					_i = FontStart + (_v[x] * 5);	// font is stored at FontStart
 					_pc += 2;
 					break;
 				}
