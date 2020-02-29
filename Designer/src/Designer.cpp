@@ -211,8 +211,8 @@ void Designer::OnGui()
 	{
 		// TODO - binary view?
 		ImGui::Text("I:\t\t0x%02X", _chip8->I());
-		ImGui::Text("Delay:\t0x%2X", _chip8->DelayTimer());
-		ImGui::Text("Sound:\t0x%2X", _chip8->SoundTimer());
+		ImGui::Text("Delay:\t0x%02X", _chip8->DelayTimer());
+		ImGui::Text("Sound:\t0x%02X", _chip8->SoundTimer());
 
 		ImGui::Separator();
 		ImGui::Columns(4, 0, false);
