@@ -288,6 +288,7 @@ void Chip8::EmulateCycle(bool paused)
 				case 0x0000:
 				{
 					_v[x] = _v[y];
+					
 					_pc += 2;
 					break;
 				}
@@ -296,6 +297,7 @@ void Chip8::EmulateCycle(bool paused)
 				case 0x0001:
 				{
 					_v[x] = _v[x] | _v[y];
+					
 					_pc += 2;
 					break;
 				}
@@ -304,6 +306,7 @@ void Chip8::EmulateCycle(bool paused)
 				case 0x0002:
 				{
 					_v[x] = _v[x] & _v[y];
+					
 					_pc += 2;
 					break;
 				}
@@ -312,6 +315,7 @@ void Chip8::EmulateCycle(bool paused)
 				case 0x0003:
 				{
 					_v[x] = _v[x] ^ _v[y];
+					
 					_pc += 2;
 					break;
 				}
@@ -321,30 +325,20 @@ void Chip8::EmulateCycle(bool paused)
 				{
 					_v[0xF] = (_v[y] > (0xFF - _v[x])) ? 1 : 0;
 					_v[x] += _v[y];
+					
 					_pc += 2;
 					break;
 				}
 
-				/*case 0x0005:
+				// 8XY5 	Math 	Vx -= Vy 	VY is subtracted from VX. VF is set to 0 when there's a borrow, and 1 when there isn't.
+				case 0x0005:
 				{
+					_v[0xF] = (_v[y] > _v[x]) ? 1 : 0;
+					_v[x] -= _v[y];
 					
+					_pc += 2;
 					break;
 				}
-
-				case 0x0006:
-				{
-					break;
-				}
-
-				case 0x0007:
-				{
-					break;
-				}
-
-				case 0x000E:
-				{
-					break;
-				}*/
 
 				default:
 				{
@@ -460,7 +454,7 @@ void Chip8::EmulateCycle(bool paused)
 		{
 
 //FX0A 	KeyOp 	Vx = get_key() 	A key press is awaited, and then stored in VX. (Blocking Operation. All instruction halted until next key event)
-//FX18 	Sound 	sound_timer(Vx) 	Sets the sound timer to VX.
+
 //FX1E 	MEM 	I +=Vx 	Adds VX to I. VF is set to 1 when there is a range overflow (I+VX>0xFFF), and to 0 when there isn't.[c]
 //FX55 	MEM 	reg_dump(Vx,&I) 	Stores V0 to VX (including VX) in memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified.[d]
 
@@ -497,6 +491,15 @@ void Chip8::EmulateCycle(bool paused)
 				case 0x0015:
 				{
 					_delayTimer = _v[x];
+					
+					_pc += 2;
+					break;
+				}
+
+				// FX18 	Sound 	sound_timer(Vx) 	Sets the sound timer to VX
+				case 0x0018:
+				{
+					_soundTimer = _v[x];
 					
 					_pc += 2;
 					break;
