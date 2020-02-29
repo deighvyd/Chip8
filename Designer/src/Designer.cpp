@@ -11,8 +11,7 @@ using namespace logging;
 
 namespace detail
 {
-	static const int ClokSpeed = 500;	// Hz
-	static const int ClockScale = 1;
+	static const int ClockSpeed = 500;	// Hz
 }
 
 /*static */int Designer::DisplayWidth()
@@ -155,8 +154,13 @@ void Designer::OnUpdate(float delta)
 	else 
 	{
 		// emulate N cycles
-		int clockSpeed = (detail::ClokSpeed * detail::ClockScale);
-		int numCycles = static_cast<int>(delta * static_cast<float>(clockSpeed));
+		float clockSpeed = static_cast<float>(detail::ClockSpeed) * _clockScale;
+		int numCycles = static_cast<int>(delta * clockSpeed);
+		if (numCycles <= 0)
+		{
+			numCycles = 1;
+		}
+
 		while (numCycles > 0)
 		{
 			_chip8->EmulateCycle();
@@ -182,10 +186,14 @@ void Designer::OnDraw()
 
 void Designer::OnGui()
 {
-	if (ImGui::Begin("Info"))
+	if (ImGui::Begin("System"))
 	{
 		ImGui::Text("Program: %s", _programFile);
 		ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+
+		ImGui::Text("Clock Speed:");
+		ImGui::SameLine();
+		ImGui::SliderFloat("##clockscale", &_clockScale, 0.1f, 5.0f);
 	}
 	ImGui::End();
 
