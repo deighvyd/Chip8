@@ -338,7 +338,7 @@ void Chip8::EmulateCycle()
 				// 8XY5 	Math 	Vx -= Vy 	VY is subtracted from VX. VF is set to 0 when there's a borrow, and 1 when there isn't.
 				case 0x0005:
 				{
-					_v[0xF] = (_v[y] > _v[x]) ? 1 : 0;
+					_v[0xF] = (_v[y] > _v[x]) ? 0 : 1;
 					_v[x] -= _v[y];
 					
 					_pc += 2;
