@@ -86,7 +86,7 @@ void Graphics::Shutdown()
 	return;
 }
 
-bool Graphics::RunFrame(HWND hWnd, Input* input)
+bool Graphics::RunFrame(HWND hWnd, Input* input, float delta)
 {
 	static float rotation = 0.0f;
 	
@@ -97,7 +97,7 @@ bool Graphics::RunFrame(HWND hWnd, Input* input)
 		rotation -= 360.0f;
 	}
 
-	if (!Render(hWnd, input, rotation))
+	if (!Render(hWnd, input, rotation, delta))
 	{
 		return false;
 	}
@@ -105,7 +105,7 @@ bool Graphics::RunFrame(HWND hWnd, Input* input)
 	return true;
 }
 
-bool Graphics::Render(HWND hWnd, Input* input, float rotation)
+bool Graphics::Render(HWND hWnd, Input* input, float rotation, float delta)
 {
 	_openGL->BeginScene(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -132,7 +132,7 @@ bool Graphics::Render(HWND hWnd, Input* input, float rotation)
 	_light->GetAmbientLight(ambientLight);
 
 	// TODO - this is shit I dont want to call out to the application instance here
-	_gui->BeginRender(_openGL, hWnd, input);
+	_gui->BeginRender(_openGL, hWnd, input, delta);
 	Application::Instance()->OnGui();
 	_gui->EndRender(_openGL, hWnd, input);
 

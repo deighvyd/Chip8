@@ -170,6 +170,7 @@ bool Application::RunFrame()
 		return false;
 	}
 
+	// TODO - can be more accurate that this
 	int currTime = timeGetTime();
     float deltaTime = _time > 0 ? (static_cast<float>(currTime - _time) * 0.001f) : (1.0f / 60.0f);;
     _time = currTime;
@@ -177,7 +178,7 @@ bool Application::RunFrame()
 	OnUpdate(deltaTime);
 	OnDraw();
 
-	bool result = _graphics->RunFrame(_hWnd, _input);
+	bool result = _graphics->RunFrame(_hWnd, _input, deltaTime);
 	if (!result)
 	{
 		return false;

@@ -184,9 +184,9 @@ void Gui::Shutdown(OpenGL* openGL)
     }
 }
 
-void Gui::BeginRender(OpenGL* openGL, HWND hWnd, Input* input)
+void Gui::BeginRender(OpenGL* openGL, HWND hWnd, Input* input, float delta)
 {
-    NewFrame(hWnd, input);
+    NewFrame(hWnd, input, delta);
 
     // some demo code
     if (detail::ShowDemoWindow)
@@ -350,10 +350,12 @@ bool Gui::SetupRenderState(OpenGL* openGL, ImDrawData* drawData, int fbWidth, in
     return true;
 }
 
-void Gui::NewFrame(HWND hWnd, Input *input)
+void Gui::NewFrame(HWND hWnd, Input *input, float delta)
 {
     ImGuiIO& io = ImGui::GetIO();
     assert(io.Fonts->IsBuilt() && "Font atlas not built! It is generally built by the renderer back-end. Missing call to renderer _NewFrame() function? e.g. ImGui_ImplOpenGL3_NewFrame().");
+
+    io.DeltaTime = delta;
 
     // setup display size (every frame to accommodate for window resizing)
     RECT rect;

@@ -23,10 +23,10 @@ public:
 
 	bool Initialize(OpenGL* openGL, HWND hwnd, Input* input);
 	void Shutdown();
-	bool RunFrame(HWND hWnd, Input* input);
+	bool RunFrame(HWND hWnd, Input* input, float delta);
 
 private:
-	bool Render(HWND hWnd, Input* input, float rotation);
+	bool Render(HWND hWnd, Input* input, float rotation, float delta);
 
 private:
 	OpenGL* _openGL;
