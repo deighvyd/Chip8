@@ -272,6 +272,9 @@ void Designer::OnGui()
 
 	if (ImGui::Begin("Keypad"))
 	{
+		static bool KeyDebug = false;
+		ImGui::Checkbox("Debug", &KeyDebug);
+
 		unsigned int numCols = Chip8::NumKeys / 4;
 		unsigned int numRows = Chip8::NumKeys / numCols;
 
@@ -296,6 +299,12 @@ void Designer::OnGui()
 					_chip8->KeyDown(key);
 				}
 				
+				if (KeyDebug)
+				{
+					ImGui::SameLine();	
+					ImGui::Text(_chip8->Key(key) ? "*" : "-");
+				}
+
 				if (col < (numCols - 1))
 				{
 					ImGui::SameLine();
