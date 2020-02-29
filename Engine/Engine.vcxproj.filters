@@ -4,8 +4,11 @@
     <Filter Include="src">
       <UniqueIdentifier>{82577cbe-fdd4-4c34-8ba0-ef8e035b4a1e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\imgui">
-      <UniqueIdentifier>{073a4d49-8d49-484c-9c0f-c97bb4f5e140}</UniqueIdentifier>
+    <Filter Include="vendor">
+      <UniqueIdentifier>{41e185a9-51e5-4350-91e5-9e099c7b19ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\imgui">
+      <UniqueIdentifier>{549b0f03-d171-4301-bdb4-3844e6983027}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -57,17 +60,17 @@
     <ClCompile Include="src\TextureShader.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\imgui\imgui_widgets.cpp">
-      <Filter>src\imgui</Filter>
+    <ClCompile Include="vendor\imgui\imgui_demo.cpp">
+      <Filter>vendor\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="src\imgui\imgui.cpp">
-      <Filter>src\imgui</Filter>
+    <ClCompile Include="vendor\imgui\imgui_draw.cpp">
+      <Filter>vendor\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="src\imgui\imgui_demo.cpp">
-      <Filter>src\imgui</Filter>
+    <ClCompile Include="vendor\imgui\imgui_widgets.cpp">
+      <Filter>vendor\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="src\imgui\imgui_draw.cpp">
-      <Filter>src\imgui</Filter>
+    <ClCompile Include="vendor\imgui\imgui.cpp">
+      <Filter>vendor\imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -116,23 +119,28 @@
     <ClInclude Include="src\TextureShader.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\imgui\imgui_internal.h">
-      <Filter>src\imgui</Filter>
+    <ClInclude Include="vendor\imgui\imgui.h">
+      <Filter>vendor\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="src\imgui\imstb_rectpack.h">
-      <Filter>src\imgui</Filter>
+    <ClInclude Include="vendor\imgui\imgui_internal.h">
+      <Filter>vendor\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="src\imgui\imstb_textedit.h">
-      <Filter>src\imgui</Filter>
+    <ClInclude Include="vendor\imgui\imstb_rectpack.h">
+      <Filter>vendor\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="src\imgui\imstb_truetype.h">
-      <Filter>src\imgui</Filter>
+    <ClInclude Include="vendor\imgui\imstb_textedit.h">
+      <Filter>vendor\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="src\imgui\imconfig.h">
-      <Filter>src\imgui</Filter>
+    <ClInclude Include="vendor\imgui\imstb_truetype.h">
+      <Filter>vendor\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="src\imgui\imgui.h">
-      <Filter>src\imgui</Filter>
+    <ClInclude Include="vendor\imgui\imconfig.h">
+      <Filter>vendor\imgui</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="vendor\imgui\LICENSE.txt">
+      <Filter>vendor\imgui</Filter>
+    </Text>
   </ItemGroup>
 </Project>

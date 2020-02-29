@@ -5,8 +5,6 @@
 #include "Chip8.h"
 #include "Log.h"
 
-#include "imgui/imgui.h"
-
 using namespace logging;
 
 namespace detail
