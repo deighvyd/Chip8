@@ -431,7 +431,7 @@ void Chip8::EmulateCycle(bool paused)
 				// EX9E 	KeyOp 	if(key()==Vx) 	Skips the next instruction if the key stored in VX is pressed. (Usually the next instruction is a jump to skip a code block)
 				case 0x009E:
 				{
-					if (_keys[x] != 0)
+					if (_keys[_v[x]] != 0)
 					{
 						_pc += 2;
 					}
@@ -442,7 +442,7 @@ void Chip8::EmulateCycle(bool paused)
 				// EXA1 	KeyOp 	if(key()!=Vx) 	Skips the next instruction if the key stored in VX isn't pressed. (Usually the next instruction is a jump to skip a code block) 
 				case 0x00A1:
 				{
-					if (_keys[x] == 0)
+					if (_keys[_v[x]] == 0)
 					{
 						_pc += 2;
 					}
