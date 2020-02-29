@@ -64,6 +64,9 @@ public:
 	bool Draw() const { return _draw; }
 	unsigned char Pixel(int x, int y) const;
 
+	const unsigned short* Stack() const { return _stack; }
+	unsigned short StackPointer() const { return _sp; }
+
 	unsigned char DelayTimer() const { return _delayTimer; }
 	unsigned char SoundTimer() const { return _soundTimer; }
 
