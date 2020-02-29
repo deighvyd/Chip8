@@ -78,6 +78,17 @@ unsigned char Chip8::Pixel(int x, int y) const
 	return _gfx[x + (ScreenWidth * y)];
 }
 
+bool Chip8::Key(unsigned int key) const
+{
+	if (key >= NumKeys)
+	{
+		Info("Error: unknown key %u", key);
+		return false;
+	}
+
+	return _keys[key];
+}
+
 void Chip8::KeyDown(unsigned int key)
 {
 	if (key >= NumKeys)

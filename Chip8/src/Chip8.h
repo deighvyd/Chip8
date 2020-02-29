@@ -67,6 +67,7 @@ public:
 	unsigned char DelayTimer() const { return _delayTimer; }
 	unsigned char SoundTimer() const { return _soundTimer; }
 
+	bool Key(unsigned int key) const;
 	void KeyDown(unsigned int key);
 	void KeyUp(unsigned int key);
 
