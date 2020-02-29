@@ -551,7 +551,7 @@ void Chip8::EmulateCycle(bool paused)
 	{
 		if(_soundTimer == 1)
 		{
-			Info("BEEP!\n");
+			Info("BEEP!");
 		}
 		--_soundTimer;
 	}  
