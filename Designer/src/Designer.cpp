@@ -5,6 +5,9 @@
 #include "Chip8.h"
 #include "Log.h"
 
+using namespace std;
+namespace filesys = std::filesystem;
+
 using namespace logging;
 
 namespace detail
@@ -35,10 +38,10 @@ Designer::Designer()
 {
 	_programFile = "../assets/programs/Original/pong.ch8";
 
-	_chip8 = new Chip8(_programFile);
+	_chip8 = new Chip8(_programFile.c_str());
 	
 	_program = new unsigned char[Chip8::TotalMemoryBytes];
-	_programSize = Chip8::ReadProgram(_programFile, _program, Chip8::TotalMemoryBytes);
+	_programSize = Chip8::ReadProgram(_programFile.c_str(), _program, Chip8::TotalMemoryBytes);
 	if (_programSize == 0)
 	{
 		MessageBox(_hWnd, L"Could not read program", L"Error", MB_OK);
@@ -226,7 +229,7 @@ void Designer::OnGui()
 
 	if (ImGui::Begin("System"))
 	{
-		ImGui::Text("Program: %s", _programFile);
+		ImGui::Text("Program: %s", _programFile.c_str());
 		ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
 
 		ImGui::Text("Clock Speed:");
@@ -254,7 +257,70 @@ void Designer::OnGui()
 		if (ImGui::Button("Reset"))
 		{
 			_chip8->Initialize();
-			_chip8->LoadProgram(_programFile);
+			_chip8->LoadProgram(_programFile.c_str());
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Load"))
+		{
+			ImGui::OpenPopup("Load Program");	
+			ImGui::SetNextWindowSize(ImVec2(320, 480));
+		}
+
+		static bool LoadOpen = true;
+		
+        if (ImGui::BeginPopupModal("Load Program", &LoadOpen))
+        {
+			static string CurrPath = "../assets/programs/Original/";
+			
+			typedef vector<string> FileList;
+			static FileList Files;
+
+			if (Files.size() == 0)
+			{
+				Files.push_back("..");
+				for (const auto& entry : filesys::directory_iterator(CurrPath))
+				{
+					Files.push_back(entry.path().filename().string());
+				}
+			}
+
+			static int Selected = 0;
+
+			ImGui::BeginChild("files", ImVec2(0, -25), true);
+
+			int index = 0;
+			for (string& file : Files)
+			{
+				if (ImGui::Selectable(file.c_str(), index == Selected))
+				{
+					Selected = index;
+				}
+				++index;
+			}
+
+			ImGui::EndChild();
+			if (ImGui::Button("Load"))
+			{
+				_programFile = CurrPath + Files[Selected];
+	
+				_chip8->Initialize();
+				_chip8->LoadProgram(_programFile.c_str());
+
+				_program = new unsigned char[Chip8::TotalMemoryBytes];
+				_programSize = Chip8::ReadProgram(_programFile.c_str(), _program, Chip8::TotalMemoryBytes);
+				if (_programSize == 0)
+				{
+					Info("Error: could not read program");
+				}	
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel"))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();   
 		}
 
 		if (ImGui::CollapsingHeader("Stack", ImGuiTreeNodeFlags_DefaultOpen))
@@ -265,7 +331,6 @@ void Designer::OnGui()
 			for (unsigned short sp = _chip8->StackPointer() ; sp > 0 ; --sp, ++count)
 			{
 				ImGui::Text("%u:\t0x%04X", count + 1, _chip8->Stack()[sp - 1]);
-
 			}
 
 			ImGui::Unindent();
