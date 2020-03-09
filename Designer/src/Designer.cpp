@@ -33,7 +33,7 @@ namespace detail
 Designer::Designer()
 	: Application(1280, 720)
 {
-	_programFile = "../assets/programs/pong";
+	_programFile = "../assets/programs/Original/pong.ch8";
 
 	_chip8 = new Chip8(_programFile);
 	
