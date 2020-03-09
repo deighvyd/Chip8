@@ -12,7 +12,7 @@ class Graphics
 {
 public:
 	static constexpr bool FullScreen = false;
-	static constexpr bool VSyncEnabled = true;
+	static constexpr bool VSyncEnabled = false;
 	static constexpr float ScreenDepth = 1000.0f;
 	static constexpr float ScreenNear = 0.1f;
 

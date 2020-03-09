@@ -55,11 +55,17 @@ Application::~Application()
 	detail::Instance = nullptr;
 }
 
+static LARGE_INTEGER frequency;
+static LARGE_INTEGER time;
+
 bool Application::Initialize(LPCWSTR name)
 {
 	_name = name;
 	int screenWidth = _width;
 	int screenHeight = _height;
+
+	QueryPerformanceFrequency(&_frequency);
+	QueryPerformanceCounter(&_time);
 
 	_openGL = new OpenGL();
 	if (_openGL == nullptr)
@@ -172,20 +178,25 @@ bool Application::RunFrame()
 		return false;
 	}
 
-	// TODO - can be more accurate that this
-	int currTime = timeGetTime();
-
-	if (currTime == _time)
+	// calculate delata time
+	LARGE_INTEGER now;
+	if (!QueryPerformanceCounter(&now))
 	{
-		Info("Error: timer resolution failure");
+		Info("Error: cannot perfomance counter");
 	}
 
-    float deltaTime = 1.f / 60.f;
-	if (_time > 0 && currTime > _time)
+	LARGE_INTEGER elapsed;
+	elapsed.QuadPart = now.QuadPart - _time.QuadPart;
+	elapsed.QuadPart *= 1000000;
+	elapsed.QuadPart /= _frequency.QuadPart;
+	
+	float deltaTime = 1.f / 60.f;
+	if (elapsed.QuadPart != 0)
 	{
-		deltaTime = static_cast<float>(currTime - _time) * 0.001f;
+		deltaTime = static_cast<float>(elapsed.QuadPart) * 0.000001f;
 	}
-    _time = currTime;
+
+	_time = now;
 
 	OnUpdate(deltaTime);
 	OnDraw();

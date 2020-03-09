@@ -47,7 +47,9 @@ protected:
 
 	bool _hasFocus;
 
-	int _time = 0;
+	// track time using QPC
+	LARGE_INTEGER _time;
+	LARGE_INTEGER _frequency;
 
 	OpenGL* _openGL;
 	Input* _input;
