@@ -289,17 +289,24 @@ void Designer::OnGui()
 			ImGui::BeginChild("files", ImVec2(0, -25), true);
 
 			int index = 0;
+			bool load = false;
 			for (string& file : Files)
 			{
 				if (ImGui::Selectable(file.c_str(), index == Selected))
 				{
-					Selected = index;
+					Selected = index;	
 				}
+
+				if (ImGui::IsItemClicked() && ImGui::IsMouseDoubleClicked(0))
+				{
+					load = true;
+				}
+
 				++index;
 			}
 
 			ImGui::EndChild();
-			if (ImGui::Button("Load"))
+			if (ImGui::Button("Load") || load)
 			{
 				_programFile = CurrPath + Files[Selected];
 	
