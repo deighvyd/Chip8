@@ -281,14 +281,6 @@ void Chip8::EmulateCycle()
 			unsigned short y = (opCode & 0x00F0) >> 4;
 			switch (opCode & 0x000F)
 			{
-				/*.
-
-..
-8XY5 	Math 	Vx -= Vy 	VY is subtracted from VX. VF is set to 0 when there's a borrow, and 1 when there isn't.
-8XY6[a] 	BitOp 	Vx>>=1 	Stores the least significant bit of VX in VF and then shifts VX to the right by 1.[b]
-8XY7[a] 	Math 	Vx=Vy-Vx 	Sets VX to VY minus VX. VF is set to 0 when there's a borrow, and 1 when there isn't.
-8XYE[a] 	BitOp 	Vx<<=1 	Stores the most significant bit of VX in VF and then shifts VX to the left by 1.[b]*/
-
 				// 8XY0 	Assign 	Vx=Vy 	Sets VX to the value of VY
 				case 0x0000:
 				{
@@ -316,7 +308,7 @@ void Chip8::EmulateCycle()
 					break;
 				}
 
-				// 8XY3[a] 	BitOp 	Vx=Vx^Vy 	Sets VX to VX xor VY
+				// 8XY3 	BitOp 	Vx=Vx^Vy 	Sets VX to VX xor VY
 				case 0x0003:
 				{
 					_v[x] = _v[x] ^ _v[y];
@@ -341,6 +333,36 @@ void Chip8::EmulateCycle()
 					_v[0xF] = (_v[y] > _v[x]) ? 0 : 1;
 					_v[x] -= _v[y];
 					
+					_pc += 2;
+					break;
+				}
+
+				// 8XY6 	BitOp 	Vx>>=1 	Stores the least significant bit of VX in VF and then shifts VX to the right by 1.
+				case 0x0006:
+				{
+					_v[0xF] = _v[x] << 7;
+					_v[x] = _v[x] >> 1;
+
+					_pc += 2;
+					break;
+				}
+
+				// 8XY7 	Math 	Vx=Vy-Vx 	Sets VX to VY minus VX. VF is set to 0 when there's a borrow, and 1 when there isn't.
+				case 0x0007:
+				{
+					_v[0xF] = (_v[x] > _v[y]) ? 0 : 1;
+					_v[x] = _v[y] - _v[x];
+					
+					_pc += 2;
+					break;
+				}
+				
+				// 8XYE 	BitOp 	Vx<<=1 	Stores the most significant bit of VX in VF and then shifts VX to the left by 1.
+				case 0x000E:
+				{
+					_v[0xF] = (_v[x] >> 7);
+					_v[x] = _v[x] << 1;
+
 					_pc += 2;
 					break;
 				}
@@ -471,12 +493,6 @@ void Chip8::EmulateCycle()
 
 		case 0xF000:
 		{
-
-//FX0A 	KeyOp 	Vx = get_key() 	A key press is awaited, and then stored in VX. (Blocking Operation. All instruction halted until next key event)
-
-//FX1E 	MEM 	I +=Vx 	Adds VX to I. VF is set to 1 when there is a range overflow (I+VX>0xFFF), and to 0 when there isn't.[c]
-
-
 			unsigned short x = (opCode & 0x0F00) >> 8;
 			switch (opCode & 0x00FF)
 			{
@@ -500,11 +516,19 @@ void Chip8::EmulateCycle()
 				}
 
 				// FX0A 	KeyOp 	Vx = get_key() 	A key press is awaited, and then stored in VX. (Blocking Operation. All instruction halted until next key event)
-				/*case 0x000A:
+				case 0x000A:
 				{
+					for (int key = 0 ; key < NumKeys ; ++key)
+					{
+						if (_keys[key])
+						{
+							_v[x] = key;
+							_pc += 2;
+						}
+					}
 
 					break;
-				}*/
+				}
 
 				// FX15 	Timer 	delay_timer(Vx) 	Sets the delay timer to VX
 				case 0x0015:
