@@ -235,6 +235,11 @@ void Designer::OnGui()
 		ImGui::Text("Clock Speed:");
 		ImGui::SameLine();
 		ImGui::SliderFloat("##clockscale", &_clockScale, 0.1f, 5.0f);
+		ImGui::SameLine();
+		if (ImGui::Button("Reset"))
+		{
+			_clockScale = 1.0f;
+		}
 	}
 	ImGui::End();
 
