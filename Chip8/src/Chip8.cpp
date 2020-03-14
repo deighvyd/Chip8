@@ -355,6 +355,20 @@ void Chip8::EmulateCycle()
 			break;
 		}
 
+		// 9XY0 	Cond 	if(Vx!=Vy) 	Skips the next instruction if VX doesn't equal VY. (Usually the next instruction is a jump to skip a code block) 
+		case 0x9000:
+		{
+			unsigned short x = (opCode & 0x0F00) >> 8;
+			unsigned short y = (opCode & 0x00F0) >> 4;
+			if (_v[x] != _v[y])
+			{
+				_pc += 2;
+			}
+
+			_pc += 2;
+			break;
+		}
+
 		// ANNN 	MEM 	I = NNN 	Sets I to the address NNN
 		case 0xA000:
 		{
@@ -461,7 +475,7 @@ void Chip8::EmulateCycle()
 //FX0A 	KeyOp 	Vx = get_key() 	A key press is awaited, and then stored in VX. (Blocking Operation. All instruction halted until next key event)
 
 //FX1E 	MEM 	I +=Vx 	Adds VX to I. VF is set to 1 when there is a range overflow (I+VX>0xFFF), and to 0 when there isn't.[c]
-//FX55 	MEM 	reg_dump(Vx,&I) 	Stores V0 to VX (including VX) in memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified.[d]
+
 
 			unsigned short x = (opCode & 0x0F00) >> 8;
 			switch (opCode & 0x00FF)
@@ -518,13 +532,35 @@ void Chip8::EmulateCycle()
 					break;
 				}
 
+				// FX55 	MEM 	reg_dump(Vx,&I) 	Stores V0 to VX (including VX) in memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified.[d]
+				case 0x0055:
+				{
+					for (unsigned short v = 0 ; v <= x ; ++v)
+					{
+						_memory[_i + v] = _v[v];
+					}
+
+					_pc += 2;
+					break;
+				}
+
 				// FX65 	MEM 	reg_load(Vx,&I) 	Fills V0 to VX (including VX) with values from memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified.
 				case 0x0065:
 				{
-					for (unsigned v = 0 ; v <= x ; ++v)
+					for (unsigned short v = 0 ; v <= x ; ++v)
 					{
 						_v[v] = _memory[_i + v];
 					}
+
+					_pc += 2;
+					break;
+				}
+
+				// FX1E 	MEM 	I +=Vx 	Adds VX to I. VF is set to 1 when there is a range overflow (I+VX>0xFFF), and to 0 when there isn't.[c]
+				case 0x001E:
+				{
+					_v[0xF] = ((_i + _v[x]) > 0xFFF) ? 1 : 0;
+					_i += _v[x];
 
 					_pc += 2;
 					break;
