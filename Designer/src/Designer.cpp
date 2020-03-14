@@ -256,6 +256,7 @@ void Designer::OnGui()
 		ImGui::SameLine();
 		if (ImGui::Button("Reset"))
 		{
+			_paused = true;
 			_chip8->Initialize();
 			_chip8->LoadProgram(_programFile.c_str());
 		}
