@@ -349,7 +349,6 @@ void Designer::OnGui()
 			ImGui::Unindent();
 		}
 
-		assert((_programSize % 2) == 0);
 		ImGui::BeginChild("instructions");
 
 		for (unsigned short pc = 0 ; pc < _programSize ; pc += 2)
