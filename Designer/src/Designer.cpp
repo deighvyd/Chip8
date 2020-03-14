@@ -276,7 +276,7 @@ void Designer::OnGui()
 		
         if (ImGui::BeginPopupModal("Load Program", &LoadOpen))
         {
-			static string CurrPath = "../assets/programs/Original/";
+			static string CurrPath = "../assets/programs/Chip-8 Games/";
 			
 			typedef vector<string> FileList;
 			static FileList Files;
@@ -286,7 +286,11 @@ void Designer::OnGui()
 				Files.push_back("..");
 				for (const auto& entry : filesys::directory_iterator(CurrPath))
 				{
-					Files.push_back(entry.path().filename().string());
+					//Info(entry.path().extension().string().c_str());
+					if (entry.path().extension() == ".ch8")
+					{
+						Files.push_back(entry.path().filename().string());
+					}
 				}
 			}
 

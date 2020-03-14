@@ -42,7 +42,7 @@ private:
 	bool _paused = true;	// default to paused because Debugger
 	unsigned int _step = 0;
 
-	float _clockScale = 1.0f;
+	float _clockScale = 1.5f;
 
 	std::string _programFile;
 	size_t _programSize = 0;
