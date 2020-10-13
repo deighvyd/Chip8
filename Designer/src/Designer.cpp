@@ -322,6 +322,7 @@ void Designer::OnGui()
 	
 				_chip8->Initialize();
 				_chip8->LoadProgram(_programFile.c_str());
+				_paused = false;
 
 				_program = new unsigned char[Chip8::TotalMemoryBytes];
 				_programSize = Chip8::ReadProgram(_programFile.c_str(), _program, Chip8::TotalMemoryBytes);
