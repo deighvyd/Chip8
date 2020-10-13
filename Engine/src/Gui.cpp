@@ -120,7 +120,8 @@ bool Gui::Initialize(OpenGL* openGL, HWND hWnd, Input* input)
 
     ImGui::StyleColorsDark();
 
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;   
 
     // setup back-end capabilities flags
     //io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;         // We can honor GetMouseCursor() values (optional)
