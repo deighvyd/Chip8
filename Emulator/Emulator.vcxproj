@@ -41,6 +41,9 @@
     <ProjectReference Include="..\Engine\Engine.vcxproj">
       <Project>{0b555490-4cbf-4a3f-8c5a-b8c61a7840c0}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\NES\NES.vcxproj">
+      <Project>{c62614d1-238d-42a2-96bc-d9fcf5bd4217}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
