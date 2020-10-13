@@ -194,7 +194,7 @@ void Shader::OutputShaderErrorMessage(OpenGL* openGL, HWND hWnd, unsigned int sh
 
 	// show in a message box
 	wchar_t newString[128];
-	unsigned int convertedChars;
+	size_t convertedChars;
 	unsigned int error = mbstowcs_s(&convertedChars, newString, 128, shaderFilename, 128);
 	if (error != 0)
 	{

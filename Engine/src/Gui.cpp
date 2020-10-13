@@ -120,7 +120,6 @@ bool Gui::Initialize(OpenGL* openGL, HWND hWnd, Input* input)
 
     ImGui::StyleColorsDark();
 
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
     // setup back-end capabilities flags
