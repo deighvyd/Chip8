@@ -42,8 +42,8 @@ protected:
 	HINSTANCE _hInstance;
 	HWND _hWnd;
 
-	int _width;
-	int _height;
+	unsigned int _width;
+	unsigned int _height;
 
 	bool _hasFocus;
 

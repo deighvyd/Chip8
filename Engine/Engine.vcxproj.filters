@@ -137,6 +137,9 @@
     <ClInclude Include="vendor\imgui\imconfig.h">
       <Filter>vendor\imgui</Filter>
     </ClInclude>
+    <ClInclude Include="src\IEmulator.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="vendor\imgui\LICENSE.txt">

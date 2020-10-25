@@ -71,6 +71,7 @@
     <ClInclude Include="src\ColourShader.h" />
     <ClInclude Include="src\Graphics.h" />
     <ClInclude Include="src\Gui.h" />
+    <ClInclude Include="src\IEmulator.h" />
     <ClInclude Include="src\Input.h" />
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\LightShader.h" />

@@ -1,24 +1,27 @@
 #pragma once
 
-class Timer
+namespace chip8
 {
-public:
-	Timer();
+	class Timer
+	{
+	public:
+		Timer();
 
-	void Start();
-	void Stop();
-	void Pause();
-	void Unpause();
+		void Start();
+		void Stop();
+		void Pause();
+		void Unpause();
 
-	unsigned int GetTicks();
+		unsigned int GetTicks();
 
-	bool IsStarted();
-	bool IsPaused();
+		bool IsStarted();
+		bool IsPaused();
 
-private:
-	unsigned int _startTicks;
-	unsigned int _pausedTicks;
-	bool _paused;
-	bool _started;
+	private:
+		unsigned int _startTicks;
+		unsigned int _pausedTicks;
+		bool _paused;
+		bool _started;
 
-};
+	};
+}

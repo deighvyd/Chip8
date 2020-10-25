@@ -7,9 +7,6 @@
 
 #include <gl\gl.h>
 
-#include <stdio.h>
+#include <imgui/imgui.h>
 
-#include <imgui.h>
-
-#include <filesystem>
 #include <unordered_map>

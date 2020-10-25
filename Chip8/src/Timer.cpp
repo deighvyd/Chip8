@@ -2,79 +2,82 @@
 
 #include "Timer.h"
 
-Timer::Timer()
+namespace chip8 
 {
-    _startTicks = 0;
-    _pausedTicks = 0;
-
-    _paused = false;
-    _started = false;
-}
-
-void Timer::Start()
-{
-    _started = true;
-    _paused = false;
-
-    //_startTicks = SDL_GetTicks();
-    _pausedTicks = 0;
-}
-
-void Timer::Stop()
-{
-    _started = false;
-    _paused = false;
-
-    _startTicks = 0;
-    _pausedTicks = 0;
-}
-
-void Timer::Pause()
-{
-    if (_started && !_paused)
+    Timer::Timer()
     {
-        _paused = true;
-
-        //_pausedTicks = SDL_GetTicks() - _startTicks;
         _startTicks = 0;
-    }
-}
+        _pausedTicks = 0;
 
-void Timer::Unpause()
-{
-    if (_started && _paused)
+        _paused = false;
+        _started = false;
+    }
+
+    void Timer::Start()
     {
+        _started = true;
         _paused = false;
 
-        //_startTicks = SDL_GetTicks() - _pausedTicks;
+        //_startTicks = SDL_GetTicks();
         _pausedTicks = 0;
     }
-}
 
-unsigned int  Timer::GetTicks()
-{
-    unsigned int  time = 0;
-    if (_started)
+    void Timer::Stop()
     {
-        if (_paused)
+        _started = false;
+        _paused = false;
+
+        _startTicks = 0;
+        _pausedTicks = 0;
+    }
+
+    void Timer::Pause()
+    {
+        if (_started && !_paused)
         {
-            time = _pausedTicks;
-        }
-        else
-        {
-            //time = SDL_GetTicks() - _startTicks;
+            _paused = true;
+
+            //_pausedTicks = SDL_GetTicks() - _startTicks;
+            _startTicks = 0;
         }
     }
 
-    return time;
-}
+    void Timer::Unpause()
+    {
+        if (_started && _paused)
+        {
+            _paused = false;
 
-bool Timer::IsStarted()
-{
-    return _started;
-}
+            //_startTicks = SDL_GetTicks() - _pausedTicks;
+            _pausedTicks = 0;
+        }
+    }
 
-bool Timer::IsPaused()
-{
-    return _paused && _started;
+    unsigned int  Timer::GetTicks()
+    {
+        unsigned int  time = 0;
+        if (_started)
+        {
+            if (_paused)
+            {
+                time = _pausedTicks;
+            }
+            else
+            {
+                //time = SDL_GetTicks() - _startTicks;
+            }
+        }
+
+        return time;
+    }
+
+    bool Timer::IsStarted()
+    {
+        return _started;
+    }
+
+    bool Timer::IsPaused()
+    {
+        return _paused && _started;
+    }
 }
