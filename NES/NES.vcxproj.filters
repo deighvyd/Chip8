@@ -12,12 +12,24 @@
     <ClCompile Include="src\NES.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\CPU.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PPU.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\pch.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\NES.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CPU.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PPU.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
