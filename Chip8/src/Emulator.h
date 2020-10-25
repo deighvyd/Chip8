@@ -13,10 +13,10 @@ namespace chip8
 		virtual ~Emulator();
 
 		unsigned int GetScreenWidth() const override { return Chip8::ScreenWidth; }
-		unsigned int GetScreenHeight() const override { return Chip8::ScreenWidth; }
+		unsigned int GetScreenHeight() const override { return Chip8::ScreenHeight; }
 
         void Update(float delta) override;
-		void Draw(unsigned int scale, unsigned char* gfxTexture) override;	// TODO - this probably should not have an unchecked pointer passed in
+		bool Draw(unsigned int scale, unsigned char* gfxTexture) override;	// TODO - this probably should not have an unchecked pointer passed in
 
 		void OnKeyUp(unsigned int param) override;
 		void OnKeyDown(unsigned int param) override;

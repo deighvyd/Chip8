@@ -28,8 +28,8 @@ private:
 	void UploadGfxTexture();
 
 private:
-	unsigned int DisplayWidth();
-	unsigned int DisplayHeight();
+	unsigned int GetDisplayWidth() const;
+	unsigned int GetDisplayHeight() const;
 
 private:
 	static constexpr unsigned int DisplayScale = 10;

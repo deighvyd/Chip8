@@ -9,7 +9,7 @@ namespace engine
 		virtual unsigned int GetScreenHeight() const = 0;
 
 		virtual void Update(float delta) = 0;
-		virtual void Draw(unsigned int scale, unsigned char* gfxTexture) = 0;	// TODO - this probably should not have an unchecked pointer passed in
+		virtual bool Draw(unsigned int scale, unsigned char* gfxTexture) = 0;	// TODO - this probably should not have an unchecked pointer passed in
 
 		virtual void OnKeyUp(unsigned int key) = 0;
 		virtual void OnKeyDown(unsigned int key) = 0;

@@ -50,14 +50,14 @@ namespace chip8
 	}
 
 	// TODO - this probably should not have an unchecked pointer passed in
-	void Emulator::Draw(unsigned int scale, unsigned char* gfxTexture)
+	bool Emulator::Draw(unsigned int scale, unsigned char* gfxTexture)
 	{
 		if (!_chip8.Draw())
 		{
-			return;
+			return false;
 		}
 
-		size_t bufferSize = ((Chip8::ScreenWidth * scale) * (Chip8::ScreenWidth * scale)) * 4;
+		size_t bufferSize = ((Chip8::ScreenWidth * scale) * (Chip8::ScreenHeight * scale)) * 4;
 		memset(gfxTexture, 0x00, bufferSize);
 		
 		// draw any on pixels into the buffer
@@ -74,6 +74,7 @@ namespace chip8
 		}
 
 		_chip8.ClearDraw();
+		return true;
 	}
 
 	void Emulator::DrawPixel(unsigned int x, unsigned int y, unsigned int scale, bool filled, unsigned char* gfxTexture)
@@ -84,7 +85,7 @@ namespace chip8
 		{
 			for (unsigned int pixelX = startX ; pixelX < (startX + scale) ; ++pixelX)
 			{
-				unsigned int pixelIdx = ((pixelY * scale) * 4) + (pixelX * 4);
+				unsigned int pixelIdx = ((pixelY * (Chip8::ScreenWidth * scale)) * 4) + (pixelX * 4);
 				gfxTexture[pixelIdx] = 0xFF;
 				gfxTexture[pixelIdx + 1] = 0xFF;
 				gfxTexture[pixelIdx + 2] = 0xFF;

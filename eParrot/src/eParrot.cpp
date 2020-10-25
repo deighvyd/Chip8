@@ -32,12 +32,12 @@ namespace detail
 	};
 }
 
-unsigned int eParrot::DisplayWidth()
+unsigned int eParrot::GetDisplayWidth() const
 {
 	return _emulator == nullptr ? 0 : (_emulator->GetScreenWidth() * DisplayScale);
 }
 
-unsigned int eParrot::DisplayHeight()
+unsigned int eParrot::GetDisplayHeight() const
 {
 	return _emulator == nullptr ? 0 : (_emulator->GetScreenHeight() * DisplayScale);
 }
@@ -69,7 +69,7 @@ bool eParrot::Initialize(LPCWSTR name)
 	assert(_gfxTexture == nullptr);
 
 	// allocate a buffer for the texture data
-	size_t bufferSize = (DisplayWidth() * DisplayHeight() * 4);
+	size_t bufferSize = (GetDisplayWidth() * GetDisplayHeight() * 4);
 	_gfxTexture = new unsigned char[bufferSize];
 	if (_gfxTexture == nullptr)
 	{
@@ -98,7 +98,7 @@ void eParrot::UploadGfxTexture()
     // upload pixels into texture
 	// TODO - allow this to be regenerated
     glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, DisplayWidth(), DisplayHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, _gfxTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, GetDisplayWidth(), GetDisplayHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, _gfxTexture);
 }
 
 void eParrot::OnKeyDown(WPARAM key)
@@ -148,9 +148,10 @@ void eParrot::OnDraw()
 		return;
 	}
 
-	_emulator->Draw(DisplayScale, _gfxTexture);
-
-	UploadGfxTexture();
+	if (_emulator->Draw(DisplayScale, _gfxTexture))
+	{
+		UploadGfxTexture();
+	}
 }
 
 void eParrot::OnGui()
@@ -162,7 +163,7 @@ void eParrot::OnGui()
 		return;
 	}
 
-	ImVec2 gfxSize = ImVec2(static_cast<float>(DisplayWidth()), static_cast<float>(DisplayHeight()));
+	ImVec2 gfxSize = ImVec2(static_cast<float>(GetDisplayWidth()), static_cast<float>(GetDisplayHeight()));
 
 	ImGui::SetNextWindowSize(ImVec2(0, 0));
 	if (ImGui::Begin("Emulator", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse))
