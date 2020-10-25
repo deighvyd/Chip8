@@ -20,8 +20,8 @@ public:
 	virtual void OnDraw() override;
 	virtual void OnGui() override;
 
-	virtual void OnKeyDown(unsigned char key) override;
-	virtual void OnKeyUp(unsigned char key) override;
+	virtual void OnKeyDown(WPARAM key) override;
+	virtual void OnKeyUp(WPARAM key) override;
 
 private:
 	bool UpdateGfxTexture();
@@ -48,7 +48,7 @@ private:
 	size_t _programSize = 0;
 	unsigned char* _program = nullptr;		// store our own copy of the program so we don't have to pollute the emulator
 
-	ImTextureID _gfxTextureId;
+	GLuint _gfxTextureId;
 	unsigned char* _gfxTexture = nullptr;
 
 };

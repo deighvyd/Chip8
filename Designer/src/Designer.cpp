@@ -14,7 +14,7 @@ namespace detail
 {
 	static const int ClockSpeed = 500;	// Hz
 
-	std::unordered_map<unsigned char, unsigned char> KeyMap = 
+	std::unordered_map<WPARAM, unsigned char> KeyMap = 
 	{
 		{ '1', 0x1 }, { '2', 0x2 }, { '3', 0x3 }, { '4', 0xC },
 		{ 'Q', 0x4 }, { 'W', 0x5 }, { 'E', 0x6 }, { 'R', 0xD },
@@ -115,10 +115,8 @@ void Designer::UploadGfxTexture()
 	// TODO - release the old texture
 
 	// build the texture
-	GLuint texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-	_gfxTextureId = (ImTextureID)texture;
+    glGenTextures(1, &_gfxTextureId);
+    glBindTexture(GL_TEXTURE_2D, _gfxTextureId);
 
     // setup filtering parameters for display
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -147,7 +145,7 @@ void Designer::DrawPixel(int x, int y, bool filled)
 	}
 }
 
-void Designer::OnKeyDown(unsigned char key)
+void Designer::OnKeyDown(WPARAM key)
 {
 	if (detail::KeyMap.find(key) != detail::KeyMap.end())
 	{
@@ -155,7 +153,7 @@ void Designer::OnKeyDown(unsigned char key)
 	}
 }
 
-void Designer::OnKeyUp(unsigned char key)
+void Designer::OnKeyUp(WPARAM key)
 {
 	if (detail::KeyMap.find(key) != detail::KeyMap.end())
 	{
@@ -498,7 +496,7 @@ void Designer::OnGui()
 	if (ImGui::Begin("Emulator", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse))
 	{
 		
-		ImGui::Image(_gfxTextureId, gfxSize, ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 1), ImVec4(255,255,255,255));
+		ImGui::Image((ImTextureID)(uintptr_t)_gfxTextureId, gfxSize, ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 1), ImVec4(255,255,255,255));
 		ImGui::End();
 	}
 }

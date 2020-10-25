@@ -20,8 +20,8 @@ public:
 	virtual void OnDraw() {}
 	virtual void OnGui() {}
 
-	virtual void OnKeyDown(unsigned char key) {}
-	virtual void OnKeyUp(unsigned char key) {}
+	virtual void OnKeyDown(WPARAM key) {}
+	virtual void OnKeyUp(WPARAM key) {}
 
 	LRESULT CALLBACK MessageHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 

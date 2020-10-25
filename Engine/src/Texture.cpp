@@ -53,7 +53,7 @@ bool Texture::LoadTarga(OpenGL* openGL, const char* filename, unsigned int textu
 	}
 
 	TargaHeader targaFileHeader;
-	unsigned int count = fread(&targaFileHeader, sizeof(TargaHeader), 1, file);
+	size_t count = fread(&targaFileHeader, sizeof(TargaHeader), 1, file);
 	if (count != 1)
 	{
 		return false;
